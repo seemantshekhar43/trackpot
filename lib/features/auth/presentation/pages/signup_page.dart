@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:trackpot/features/auth/presentation/widgets/auth_button.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/loader.dart';
+import '../widgets/auth_button.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../widgets/auth_field.dart';
 import 'login_page.dart';
+import '../bloc/auth_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -16,17 +19,14 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final nameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    nameController.dispose();
     super.dispose();
   }
 
@@ -36,7 +36,23 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Form(
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              showSnackBar(context, state.message);
+            } else if (state is AuthSuccess) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                LoginPage.route(),
+                (route) => false,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Loader();
+            }
+            return Form(
               key: formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -49,11 +65,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  AuthField(
-                    hintText: 'Name',
-                    controller: nameController,
-                  ),
-                  const SizedBox(height: 15),
                   AuthField(
                     hintText: 'Email',
                     controller: emailController,
@@ -68,7 +79,14 @@ class _SignUpPageState extends State<SignUpPage> {
                   AuthButton(
                     buttonText: 'Sign Up',
                     onPressed: () {
-
+                      if (formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(
+                              AuthSignUp(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              ),
+                            );
+                      }
                     },
                   ),
                   const SizedBox(height: 20),
@@ -87,9 +105,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                              color: AppPalette.gradient2,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                  color: AppPalette.gradient2,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ],
                       ),
@@ -97,8 +115,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ],
               ),
-            ),
+            );
+          },
         ),
+      ),
     );
   }
 }

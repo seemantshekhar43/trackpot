@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trackpot/core/exception/exception_constants.dart';
 import '../../../../core/theme/app_palette.dart';
+import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/loader.dart';
 import '../widgets/auth_button.dart';
+import '../bloc/auth_bloc.dart';
 
 import '../widgets/auth_field.dart';
 import 'signup_page.dart';
@@ -32,58 +37,85 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Sign In.',
-                style: TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 30),
-              AuthField(
-                hintText: 'Email',
-                controller: emailController,
-              ),
-              const SizedBox(height: 15),
-              AuthField(
-                hintText: 'Password',
-                controller: passwordController,
-                isObscureText: true,
-              ),
-              const SizedBox(height: 20),
-              AuthButton(
-                buttonText: 'Sign in',
-                onPressed: () {},
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, SignUpPage.route());
-                },
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Don\'t have an account? ',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    children: [
-                      TextSpan(
-                        text: 'Sign Up',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              showSnackBar(context, state.message);
+            } else if (state is AuthUserUnverified) {
+              showSnackBar(context, ExceptionConstants.verifyEmailAddress);
+            } else if (state is AuthSuccess) {
+              showSnackBar(context, state.user.$id);
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Loader();
+            }
+            return Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Sign In.',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  AuthField(
+                    hintText: 'Email',
+                    controller: emailController,
+                  ),
+                  const SizedBox(height: 15),
+                  AuthField(
+                    hintText: 'Password',
+                    controller: passwordController,
+                    isObscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  AuthButton(
+                    buttonText: 'Sign in',
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(
+                              AuthLogin(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              ),
+                            );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, SignUpPage.route());
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Don\'t have an account? ',
+                        style: Theme.of(context).textTheme.titleMedium,
+                        children: [
+                          TextSpan(
+                            text: 'Sign Up',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
                                   color: AppPalette.gradient2,
                                   fontWeight: FontWeight.bold,
                                 ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
