@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trackpot/core/exception/exception_constants.dart';
+import 'package:trackpot/core/constants/exception_constants.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/loader.dart';
@@ -43,8 +43,9 @@ class _LoginPageState extends State<LoginPage> {
               showSnackBar(context, state.message);
             } else if (state is AuthUserUnverified) {
               showSnackBar(context, ExceptionConstants.verifyEmailAddress);
-            } else if (state is AuthSuccess) {
-              showSnackBar(context, state.user.$id);
+            } else if (state is AuthLoginSuccess) {
+              showSnackBar(
+                  context, '${state.user.username} logged in successfully!');
             }
           },
           builder: (context, state) {

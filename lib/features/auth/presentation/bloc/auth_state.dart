@@ -9,9 +9,9 @@ final class AuthInitial extends AuthState {}
 
 final class AuthLoading extends AuthState {}
 
-final class AuthSuccess extends AuthState {
+final class AuthSignUpSuccess extends AuthState {
   final model.User user;
-  const AuthSuccess(this.user);
+  const AuthSignUpSuccess(this.user);
 }
 
 final class AuthFailure extends AuthState {
@@ -22,4 +22,9 @@ final class AuthFailure extends AuthState {
 final class AuthUserUnverified extends AuthState {
   final model.User user;
   const AuthUserUnverified(this.user);
+}
+
+final class AuthLoginSuccess extends AuthState {
+  final User user;
+  const AuthLoginSuccess(this.user);
 }

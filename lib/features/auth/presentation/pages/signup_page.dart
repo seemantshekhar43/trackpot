@@ -40,7 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
           listener: (context, state) {
             if (state is AuthFailure) {
               showSnackBar(context, state.message);
-            } else if (state is AuthSuccess) {
+            } else if (state is AuthSignUpSuccess) {
               Navigator.pushAndRemoveUntil(
                 context,
                 LoginPage.route(),

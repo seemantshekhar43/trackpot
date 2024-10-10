@@ -1,6 +1,8 @@
 import 'package:appwrite/models.dart' as appwrite;
 import 'package:fpdart/fpdart.dart';
-import 'package:trackpot/core/exception/exception_constants.dart';
+import '../../../../core/exception/appwrite_custom_exception.dart';
+import '../../../../core/common/entities/user.dart';
+import '../../../../core/constants/exception_constants.dart';
 import '../../../../core/exception/failure.dart';
 import '../../../../core/exception/server_exception.dart';
 import '../../../../core/network/network_connection_checker.dart';
@@ -14,23 +16,39 @@ class AuthRepositoryImpl implements AuthRepository {
       this.remoteDataSource, this.networkConnectionChecker);
 
   @override
-  Future<appwrite.User?> getCurrentUser() => remoteDataSource.getCurrentUser();
+  Future<Either<Failure, appwrite.User>> getCurrentUser() async {
+    try {
+      if (!await (networkConnectionChecker.isConnected)) {
+        return left(Failure(message: ExceptionConstants.noNetworkConnection));
+      }
+
+      final user = await remoteDataSource.getCurrentUser();
+      if (user != null) {
+        return right(user);
+      }
+      return left(Failure(
+          type: ExceptionConstants.userSessionNotFound,
+          message: ExceptionConstants.userSessionNotFound));
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
 
   @override
   Future<Either<Failure, appwrite.User>> logIn(
       {required String email, required String password}) async {
     try {
       if (!await (networkConnectionChecker.isConnected)) {
-        return left(Failure(ExceptionConstants.noNetworkConnection));
+        return left(Failure(message: ExceptionConstants.noNetworkConnection));
       }
       final appwrite.Session session = await remoteDataSource
           .loginWithEmailPassword(email: email, password: password);
 
-      final user = await getCurrentUser();
+      final user = await remoteDataSource.getCurrentUser();
 
       return right(user!);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(message: e.message));
     }
   }
 
@@ -39,14 +57,33 @@ class AuthRepositoryImpl implements AuthRepository {
       {required String email, required String password}) async {
     try {
       if (!await (networkConnectionChecker.isConnected)) {
-        return left(Failure(ExceptionConstants.noNetworkConnection));
+        return left(Failure(message: ExceptionConstants.noNetworkConnection));
       }
       final user = await remoteDataSource.signUpWithEmailPassword(
           email: email, password: password);
 
       return right(user);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, User>> getCurrentUserDetails(
+      {required String id}) async {
+    try {
+      if (!await (networkConnectionChecker.isConnected)) {
+        return left(Failure(message: ExceptionConstants.noNetworkConnection));
+      }
+      final User user = await remoteDataSource.getCurrentUserDetails(id);
+
+      return right(user);
+    } on AppwriteDocumentNotFoundException catch (e) {
+      return left(Failure(
+          type: ExceptionConstants.userDoesNotExist, message: e.message));
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
 }

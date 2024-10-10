@@ -13,18 +13,26 @@ Future<void> initDependencies() async {
 
   serviceLocator.registerLazySingleton(() => client);
 
-  serviceLocator.registerLazySingleton(
-        () => Account(serviceLocator()),
+  serviceLocator.registerLazySingleton<Account>(
+    () => Account(serviceLocator()),
   );
 
-  serviceLocator.registerFactory(() => InternetConnection());
+  serviceLocator.registerLazySingleton<Databases>(
+    () => Databases(serviceLocator()),
+  );
+  serviceLocator
+      .registerFactory<InternetConnection>(() => InternetConnection());
 
   // core
 
   serviceLocator.registerFactory<NetworkConnectionChecker>(
-        () => NetworkConnectionCheckerImpl(
+    () => NetworkConnectionCheckerImpl(
       serviceLocator(),
     ),
+  );
+
+  serviceLocator.registerLazySingleton<AppUserCubit>(
+        () => AppUserCubit(),
   );
 }
 
@@ -32,34 +40,41 @@ void _initAuth() {
   // Datasource
   serviceLocator
     ..registerFactory<AuthRemoteDataSource>(
-          () => AuthRemoteDataSourceImpl(
-        serviceLocator(),
-      ),
+      () => AuthRemoteDataSourceImpl(serviceLocator(), serviceLocator()),
     )
-  // Repository
+    // Repository
     ..registerFactory<AuthRepository>(
-          () => AuthRepositoryImpl(
+      () => AuthRepositoryImpl(
         serviceLocator(),
         serviceLocator(),
       ),
     )
-  // Usecases
-    ..registerFactory(
-          () => UserSignup(
+    // Usecases
+    ..registerFactory<UserSignup>(
+      () => UserSignup(
         serviceLocator(),
       ),
     )
-    ..registerFactory(
-          () => UserLogin(
+    ..registerFactory<UserLogin>(
+      () => UserLogin(
         serviceLocator(),
       ),
+    )
+    ..registerFactory<UserGetDetails>(
+      () => UserGetDetails(serviceLocator()),
+    )
+    ..registerFactory<UserGetCurrentUser>(
+      () => UserGetCurrentUser(serviceLocator()),
     )
 
-  // Bloc
+    // Bloc
     ..registerLazySingleton(
-          () => AuthBloc(
+      () => AuthBloc(
         userSignup: serviceLocator(),
         userLogin: serviceLocator(),
+        userGetDetails: serviceLocator(),
+        userGetCurrentUser: serviceLocator(),
+        appUserCubit: serviceLocator(),
       ),
     );
 }

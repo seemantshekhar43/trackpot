@@ -1,4 +1,6 @@
 class Failure {
   final String message;
-  Failure([this.message = 'An unexpected error occurred,']);
+  final String type;
+  Failure({this.type = 'Server Error', this.message = 'An unexpected error occurred'});
+
 }
