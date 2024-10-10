@@ -32,7 +32,7 @@ Future<void> initDependencies() async {
   );
 
   serviceLocator.registerLazySingleton<AppUserCubit>(
-        () => AppUserCubit(),
+    () => AppUserCubit(),
   );
 }
 
@@ -66,6 +66,9 @@ void _initAuth() {
     ..registerFactory<UserGetCurrentUser>(
       () => UserGetCurrentUser(serviceLocator()),
     )
+    ..registerFactory<UserLogOut>(
+      () => UserLogOut(serviceLocator()),
+    )
 
     // Bloc
     ..registerLazySingleton(
@@ -75,6 +78,7 @@ void _initAuth() {
         userGetDetails: serviceLocator(),
         userGetCurrentUser: serviceLocator(),
         appUserCubit: serviceLocator(),
+        userLogOut: serviceLocator(),
       ),
     );
 }

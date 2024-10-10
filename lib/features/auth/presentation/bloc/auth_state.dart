@@ -28,3 +28,9 @@ final class AuthLoginSuccess extends AuthState {
   final User user;
   const AuthLoginSuccess(this.user);
 }
+
+final class AuthLogOutSuccess extends AuthState {
+  const AuthLogOutSuccess();
+}
+
+final class AuthUserDoesNotExist extends AuthState {}

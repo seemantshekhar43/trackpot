@@ -18,6 +18,7 @@ abstract interface class AuthRemoteDataSource {
   });
   Future<appwriteModel.User?> getCurrentUser();
   Future<User> getCurrentUserDetails(String id);
+  Future<void> deleteCurrentSession();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -87,6 +88,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw AppwriteDocumentNotFoundException(
             e.message ?? 'Some unexpected error occurred');
       }
+      throw ServerException(e.message ?? 'Some unexpected error occurred');
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteCurrentSession() async {
+    try {
+      await _appwriteAccount.deleteSession(
+        sessionId: 'current',
+      );
+      return;
+    } on AppwriteException catch (e) {
       throw ServerException(e.message ?? 'Some unexpected error occurred');
     } catch (e) {
       throw ServerException(e.toString());

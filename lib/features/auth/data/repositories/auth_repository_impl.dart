@@ -86,4 +86,17 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, void>> logOut() async{
+    try {
+      if (!await (networkConnectionChecker.isConnected)) {
+        return left(Failure(message: ExceptionConstants.noNetworkConnection));
+      }
+      await remoteDataSource.deleteCurrentSession();
+      return right(null);
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
 }

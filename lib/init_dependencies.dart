@@ -1,8 +1,9 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:trackpot/core/network/network_connection_checker.dart';
-import 'package:trackpot/core/secrets/app_secrets.dart';
+import 'package:trackpot/features/auth/domain/usecases/user_log_out.dart';
+import 'core/network/network_connection_checker.dart';
+import 'core/secrets/app_secrets.dart';
 import 'features/auth/domain/usecases/user_get_current_user.dart';
 import 'features/auth/domain/usecases/user_get_details.dart';
 

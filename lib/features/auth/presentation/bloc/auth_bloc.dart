@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trackpot/core/common/cubits/app_user/app_user_cubit.dart';
+import 'package:trackpot/core/constants/exception_constants.dart';
 import 'package:trackpot/features/auth/domain/usecases/user_get_current_user.dart';
 import 'package:trackpot/features/auth/domain/usecases/user_get_details.dart';
+import 'package:trackpot/features/auth/domain/usecases/user_log_out.dart';
 import '../../../../core/common/entities/user.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/usecases/user_login.dart';
@@ -17,22 +19,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserGetDetails _userGetDetails;
   final UserGetCurrentUser _getCurrentUser;
   final AppUserCubit _appUserCubit;
+  final UserLogOut _userLogOut;
   AuthBloc({
     required UserSignup userSignup,
     required UserLogin userLogin,
     required UserGetDetails userGetDetails,
     required UserGetCurrentUser userGetCurrentUser,
     required AppUserCubit appUserCubit,
+    required UserLogOut userLogOut,
   })  : _userSignup = userSignup,
         _userLogin = userLogin,
         _userGetDetails = userGetDetails,
         _getCurrentUser = userGetCurrentUser,
         _appUserCubit = appUserCubit,
+        _userLogOut = userLogOut,
         super(AuthInitial()) {
     on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<AuthSignUp>(_onAuthSignup);
     on<AuthLogin>(_onAuthLogin);
     on<AuthIsUserLoggedIn>(_isUserLoggedIn);
+    on<AuthLogOut>(_onAuthLogOut);
   }
 
   void _onAuthSignup(
@@ -95,7 +101,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final res = await _getCurrentUser(NoParams());
     if (res.isLeft()) {
       final failure = res.getLeft().toNullable();
-      emit(AuthFailure(failure!.message));
+      if (ExceptionConstants.userSessionNotFound == failure?.type) {
+        emit(AuthUserDoesNotExist());
+      } else {
+        emit(AuthFailure(failure!.message));
+      }
     } else {
       final user = res.getRight().toNullable();
       await _fetchCurrentUserDetails(user!.$id, emit);
@@ -118,14 +128,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     String id,
     Emitter<AuthState> emit,
   ) async {
-    print('id : ${id}');
     final userDetails =
         await _userGetDetails.call(UserGetDetailsParams(id: id));
     userDetails.fold(
       (failure) {
-        emit(AuthFailure(failure.message));
+        if (ExceptionConstants.userSessionNotFound == failure.type) {
+          emit(AuthUserDoesNotExist());
+        } else {
+          emit(AuthFailure(failure.message));
+        }
       },
       (user) => _emitAuthLoginSuccess(user, emit),
     );
+  }
+
+  void _onAuthLogOut(
+    AuthLogOut event,
+    Emitter<AuthState> emit,
+  ) async {
+    final res = await _userLogOut.call(NoParams());
+
+    res.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (user) => _emitLogOutSuccess(emit),
+    );
+  }
+
+  void _emitLogOutSuccess(
+    Emitter<AuthState> emit,
+  ) {
+    _updateAppUserState(AppUserInitial());
+    emit(const AuthLogOutSuccess());
   }
 }
