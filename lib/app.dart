@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'core/theme/theme_constants.dart';
+import 'core/theme/theme_util.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/splash/presentation/pages/splash_page.dart';
 import 'core/common/cubits/app_user/app_user_cubit.dart';
@@ -24,10 +27,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize app theme
+    GoogleFonts.config.allowRuntimeFetching = false;
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    TextTheme textTheme = createTextTheme(context, ThemeConstants.textBodyFontFamily, ThemeConstants.textDisplayFontFamily);
+    MaterialTheme theme = MaterialTheme(textTheme);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Trackpot',
-      theme: AppTheme.darkThemeMode,
+      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       home: BlocSelector<AppUserCubit, AppUserState, bool>(
         selector: (state) {
           return state is AppUserLoggedIn;

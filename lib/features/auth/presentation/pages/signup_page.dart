@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/loader.dart';
 import '../widgets/auth_button.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../widgets/auth_field.dart';
 import 'login_page.dart';
 import '../bloc/auth_bloc.dart';
@@ -105,7 +104,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  color: AppPalette.gradient2,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),

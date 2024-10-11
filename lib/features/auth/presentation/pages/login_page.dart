@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trackpot/core/constants/exception_constants.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/loader.dart';
 import '../widgets/auth_button.dart';
@@ -40,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailure) {
+              print(state.message);
               showSnackBar(context, state.message);
             } else if (state is AuthUserUnverified) {
               showSnackBar(context, ExceptionConstants.verifyEmailAddress);
@@ -105,7 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  color: AppPalette.gradient2,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
