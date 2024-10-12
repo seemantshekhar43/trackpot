@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'core/common/cubits/app_user/app_user_cubit.dart';
+import 'core/theme/theme.dart';
 import 'core/theme/theme_constants.dart';
 import 'core/theme/theme_util.dart';
-import 'features/home/presentation/pages/home_page.dart';
-import 'features/splash/presentation/pages/splash_page.dart';
-import 'core/common/cubits/app_user/app_user_cubit.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'core/theme/theme.dart';
+import 'features/home/presentation/pages/home_page.dart';
+import 'features/splash/presentation/pages/splash_page.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -29,14 +29,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // Initialize app theme
     GoogleFonts.config.allowRuntimeFetching = false;
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
-    TextTheme textTheme = createTextTheme(context, ThemeConstants.textBodyFontFamily, ThemeConstants.textDisplayFontFamily);
+    TextTheme textTheme = createTextTheme(
+        context,
+        ThemeConstants.textBodyFontFamily,
+        ThemeConstants.textDisplayFontFamily);
     MaterialTheme theme = MaterialTheme(textTheme);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Trackpot',
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      theme: isDarkMode(context) ? theme.dark() : theme.light(),
+      //home: HomePage(),
       home: BlocSelector<AppUserCubit, AppUserState, bool>(
         selector: (state) {
           return state is AppUserLoggedIn;

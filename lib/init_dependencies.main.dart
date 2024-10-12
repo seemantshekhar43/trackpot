@@ -80,5 +80,6 @@ void _initAuth() {
         appUserCubit: serviceLocator(),
         userLogOut: serviceLocator(),
       ),
-    );
+    )
+    ..registerLazySingleton(() => HomeBloc());
 }
