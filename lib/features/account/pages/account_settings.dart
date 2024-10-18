@@ -3,6 +3,8 @@ import 'package:trackpot/core/styles/sizes.dart';
 import 'package:trackpot/features/account/widgets/section_heading.dart';
 import 'package:trackpot/features/account/widgets/settings_list_item.dart';
 
+import '../../profile/presentation/pages/profile_page.dart';
+
 class AccountSettingsPage extends StatelessWidget {
   const AccountSettingsPage({super.key});
 
@@ -14,22 +16,14 @@ class AccountSettingsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Theme.of(context).primaryColor.withOpacity(.5),
-                  width: 5.0,
-                ),
-              ),
-              child: const CircleAvatar(
-                radius: 60,
+            const Center(
+              child: CircleAvatar(
+                radius: KSizes.circleImageAvatarRadiusSize,
                 backgroundImage: AssetImage('assets/images/user.png'),
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: KSizes.smd,
             ),
             SizedBox(
               width: double.infinity,
@@ -39,7 +33,7 @@ class AccountSettingsPage extends StatelessWidget {
                   Text('John Doe',
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(
-                    height: 24,
+                    height: KSizes.lg,
                     child: Icon(Icons.qr_code_2),
                   )
                 ],
@@ -59,7 +53,9 @@ class AccountSettingsPage extends StatelessWidget {
             SettingsListItem(
               icon: Icons.person,
               title: 'My profile',
-              onTap: () => {},
+              onTap: () => {
+                Navigator.push(context, ProfilePage.route())
+              },
             ),
             const Divider(),
             const Padding(
