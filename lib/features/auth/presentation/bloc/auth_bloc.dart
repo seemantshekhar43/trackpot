@@ -116,7 +116,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     User user,
     Emitter<AuthState> emit,
   ) {
-    _updateAppUserState(AppUserLoggedIn(user));
+    _updateAppUserState(AppUserAuthenticated(user));
     emit(AuthLoginSuccess(user));
   }
 

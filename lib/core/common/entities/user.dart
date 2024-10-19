@@ -71,4 +71,9 @@ class User {
       profilePicture: profilePicture ?? this.profilePicture,
     );
   }
+
+  @override
+  String toString() {
+    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, phoneNumber: $phoneNumber, username: $username, location: $location, currency: $currency, profilePicture: $profilePicture)';
+  }
 }

@@ -11,4 +11,5 @@ class AppUserCubit extends Cubit<AppUserState> {
   void updateUserState(AppUserState state) {
     emit(state);
   }
+
 }

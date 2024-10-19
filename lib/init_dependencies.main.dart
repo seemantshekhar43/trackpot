@@ -4,6 +4,7 @@ final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   _initAuth();
+  _initProfile();
 
   Client client = Client();
   client
@@ -82,4 +83,19 @@ void _initAuth() {
       ),
     )
     ..registerLazySingleton(() => HomeBloc());
+}
+
+void _initProfile() {
+  serviceLocator
+    // dataSource
+    ..registerFactory<ProfileRemoteDataSource>(
+        () => ProfileRemoteDataSourceImpl(appwriteDB: serviceLocator()))
+    //repository
+    ..registerFactory<ProfileRepository>(
+        () => ProfileRepositoryImpl(profileRemoteDataSource: serviceLocator()))
+    //usecases
+    ..registerFactory<UpdateUserData>(() => UpdateUserData(serviceLocator()))
+    //bloc
+    ..registerFactoryParam<ProfileBloc, User, void>((user, _) => ProfileBloc(
+        appUserCubit: serviceLocator(), updateUserData: serviceLocator(), initialUser: user));
 }

@@ -1,6 +1,12 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:trackpot/core/common/entities/user.dart';
+import 'package:trackpot/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:trackpot/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:trackpot/features/profile/domain/repository/profile_repository.dart';
+import 'package:trackpot/features/profile/domain/repository/update_user_data.dart';
+import 'package:trackpot/features/profile/presentation/bloc/profile_bloc.dart';
 import 'features/auth/domain/usecases/user_log_out.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'core/network/network_connection_checker.dart';
