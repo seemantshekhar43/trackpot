@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       //home: HomePage(),
       home: BlocSelector<AppUserCubit, AppUserState, bool>(
         selector: (state) {
-          return state is AppUserLoggedIn;
+          return state is AppUserAuthenticated;
         },
         builder: (context, isLoggedIn) {
           if (isLoggedIn) {

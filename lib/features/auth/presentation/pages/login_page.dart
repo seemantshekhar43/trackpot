@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trackpot/core/constants/exception_constants.dart';
+
+import '../../../../core/constants/exception_constants.dart';
+import '../../../../core/styles/sizes.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/loader.dart';
 import '../widgets/auth_button.dart';
@@ -35,11 +37,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(KSizes.md),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailure) {
-              print(state.message);
               showSnackBar(context, state.message);
             } else if (state is AuthUserUnverified) {
               showSnackBar(context, ExceptionConstants.verifyEmailAddress);
@@ -57,25 +58,20 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Sign In.',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
+                  Text('Sign In.',
+                      style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(height: KSizes.xl),
                   AuthField(
-                    hintText: 'Email',
+                    labelText: 'Email',
                     controller: emailController,
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: KSizes.md),
                   AuthField(
-                    hintText: 'Password',
+                    labelText: 'Password',
                     controller: passwordController,
                     isObscureText: true,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: KSizes.md),
                   AuthButton(
                     buttonText: 'Sign in',
                     onPressed: () {
@@ -89,29 +85,21 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                   ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, SignUpPage.route());
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Don\'t have an account? ',
+                  const SizedBox(height: KSizes.md),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Don\'t have an account?',
                         style: Theme.of(context).textTheme.titleMedium,
-                        children: [
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ],
                       ),
-                    ),
-                  ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(context, SignUpPage.route());
+                          },
+                          child: const Text('Sign Up')),
+                    ],
+                  )
                 ],
               ),
             );

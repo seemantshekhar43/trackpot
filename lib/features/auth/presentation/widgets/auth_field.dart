@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/styles/sizes.dart';
+
 class AuthField extends StatelessWidget {
-  final String hintText;
+  final String labelText;
   final TextEditingController controller;
   final bool isObscureText;
   const AuthField({
     super.key,
-    required this.hintText,
+    required this.labelText,
     required this.controller,
     this.isObscureText = false,
   });
@@ -16,11 +18,16 @@ class AuthField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: hintText,
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.onInverseSurface,
+        labelText: labelText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(KSizes.borderRadiusLg),
+        ),
       ),
       validator: (value) {
         if (value!.isEmpty) {
-          return "$hintText is missing!";
+          return "$labelText is missing!";
         }
         return null;
       },

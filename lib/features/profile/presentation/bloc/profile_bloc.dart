@@ -48,15 +48,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       ChangeProfileEvent event, Emitter<ProfileState> emit) {
     if (_isChanged(_initialUser, event.changedUser)) {
       emit(ProfileChanged(event.changedUser));
-      print('changed');
     }else{
       emit(ProfileInitial(_initialUser));
     }
   }
 
   bool _isChanged(User initial, User changed) {
-    print(initial.toString());
-    print(changed.toString());
     return initial.firstName != changed.firstName ||
         initial.username != changed.username ||
         (initial.lastName ?? '') != (changed.lastName ?? '') ||
