@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:trackpot/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:trackpot/core/constants/exception_constants.dart';
+import 'package:trackpot/core/exception/failure.dart';
 import 'package:trackpot/features/auth/domain/usecases/user_get_current_user.dart';
 import 'package:trackpot/features/auth/domain/usecases/user_get_details.dart';
 import 'package:trackpot/features/auth/domain/usecases/user_log_out.dart';
@@ -76,7 +78,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = res.getRight().toNullable();
       user!.emailVerification
           ? await _fetchCurrentUserDetails(user.$id, emit)
-          : _emitAuthUserUnverified(user, emit);
+          : await _emitAuthUserUnverified(user, emit);
     }
   }
 
@@ -87,10 +89,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthSignUpSuccess(user));
   }
 
-  void _emitAuthUserUnverified(
+  Future<void> _emitAuthUserUnverified(
     model.User user,
     Emitter<AuthState> emit,
-  ) {
+  ) async {
+    await _clearSession();
     emit(AuthUserUnverified(user));
   }
 
@@ -130,28 +133,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     final userDetails =
         await _userGetDetails.call(UserGetDetailsParams(id: id));
-    userDetails.fold(
-      (failure) {
-        if (ExceptionConstants.userSessionNotFound == failure.type) {
-          emit(AuthUserDoesNotExist());
-        } else {
-          emit(AuthFailure(failure.message));
-        }
-      },
-      (user) => _emitAuthLoginSuccess(user, emit),
-    );
+    if (userDetails.isLeft()) {
+      final failure = userDetails.getLeft().toNullable();
+      await _clearSession();
+      if (ExceptionConstants.userSessionNotFound == failure?.type) {
+        emit(AuthUserDoesNotExist());
+      } else {
+        emit(AuthFailure(failure!.message));
+      }
+    } else {
+      final user = userDetails.getRight().toNullable();
+      _emitAuthLoginSuccess(user!, emit);
+    }
   }
 
   void _onAuthLogOut(
     AuthLogOut event,
     Emitter<AuthState> emit,
   ) async {
-    final res = await _userLogOut.call(NoParams());
+    final res = await _clearSession();
 
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
       (user) => _emitLogOutSuccess(emit),
     );
+  }
+
+  Future<Either<Failure, void>> _clearSession() async {
+    return await _userLogOut.call(NoParams());
   }
 
   void _emitLogOutSuccess(

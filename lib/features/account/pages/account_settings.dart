@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/styles/sizes.dart';
+import '../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/section_heading.dart';
 import '../widgets/settings_list_item.dart';
 
@@ -142,15 +143,20 @@ class AccountSettingsPage extends StatelessWidget {
                   ),
                   const Divider(),
                   const SizedBox(
-                    height: KSizes.md,
+                    height: KSizes.sm,
                   ),
                   Center(
+                      child: TextButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(AuthLogOut());
+                    },
                     child: Text(
                       'Log Out',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.error),
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                     ),
-                  ),
+                  )),
                   const SizedBox(
                     height: KSizes.md,
                   ),
