@@ -94,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.push(context, SignUpPage.route());
+                           Navigator.pop(context);
                           },
                           child: const Text('Sign In')),
                     ],

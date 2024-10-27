@@ -41,7 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (!await (networkConnectionChecker.isConnected)) {
         return left(Failure(message: ExceptionConstants.noNetworkConnection));
       }
-      final appwrite.Session session = await remoteDataSource
+      await remoteDataSource
           .loginWithEmailPassword(email: email, password: password);
 
       final user = await remoteDataSource.getCurrentUser();

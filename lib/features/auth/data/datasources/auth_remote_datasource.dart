@@ -1,5 +1,5 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as appwriteModel;
+import 'package:appwrite/models.dart' as appwrite_model;
 import '../../../../core/constants/appwrite_exception_types_constants.dart';
 import '../../../../core/exception/appwrite_custom_exception.dart';
 import '../../../../../core/exception/server_exception.dart';
@@ -8,15 +8,15 @@ import '../../../../core/constants/appwrite_constants.dart';
 import '../../../../core/secrets/app_secrets.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<appwriteModel.User> signUpWithEmailPassword({
+  Future<appwrite_model.User> signUpWithEmailPassword({
     required String email,
     required String password,
   });
-  Future<appwriteModel.Session> loginWithEmailPassword({
+  Future<appwrite_model.Session> loginWithEmailPassword({
     required String email,
     required String password,
   });
-  Future<appwriteModel.User?> getCurrentUser();
+  Future<appwrite_model.User?> getCurrentUser();
   Future<User> getCurrentUserDetails(String id);
   Future<void> deleteCurrentSession();
 }
@@ -30,10 +30,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         _appwriteDB = appwriteDB;
 
   @override
-  Future<appwriteModel.Session> loginWithEmailPassword(
+  Future<appwrite_model.Session> loginWithEmailPassword(
       {required String email, required String password}) async {
     try {
-      final appwriteModel.Session session =
+      final appwrite_model.Session session =
           await _appwriteAccount.createEmailPasswordSession(
         email: email,
         password: password,
@@ -47,10 +47,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<appwriteModel.User> signUpWithEmailPassword(
+  Future<appwrite_model.User> signUpWithEmailPassword(
       {required String email, required String password}) async {
     try {
-      final appwriteModel.User user = await _appwriteAccount.create(
+      final appwrite_model.User user = await _appwriteAccount.create(
         userId: ID.unique(),
         email: email,
         password: password,
@@ -64,7 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<appwriteModel.User?> getCurrentUser() async {
+  Future<appwrite_model.User?> getCurrentUser() async {
     try {
       return await _appwriteAccount.get();
     } on AppwriteException {
@@ -77,7 +77,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<User> getCurrentUserDetails(String id) async {
     try {
-      final appwriteModel.Document document = await _appwriteDB.getDocument(
+      final appwrite_model.Document document = await _appwriteDB.getDocument(
         databaseId: AppSecrets.databaseId,
         collectionId: AppwriteConstants.usersCollection,
         documentId: id,
