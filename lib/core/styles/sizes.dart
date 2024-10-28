@@ -11,6 +11,7 @@ class KSizes {
   // Icon sizes
   static const double iconXs = 12.0;
   static const double iconSm = 16.0;
+  static const double iconSMd = 20.0;
   static const double iconMd = 24.0;
   static const double iconLg = 32.0;
 
@@ -46,10 +47,10 @@ class KSizes {
   // Divider height
   static const double dividerHeight = 1.0;
 
-  // Product item dimensions
-  static const double productImageSize = 120.0;
-  static const double productImageRadius = 16.0;
-  static const double productItemHeight = 160.0;
+  // container  dimensions
+  static const double containerSquareLg = 120.0;
+  static const double containerSquareSMd = 100.0;
+  static const double containerSquareXLg = 160.0;
 
   // Input field
   static const double inputFieldRadius = 12.0;

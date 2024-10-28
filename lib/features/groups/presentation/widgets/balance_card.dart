@@ -35,7 +35,7 @@ class BalanceCard extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             // Owed and Owe Section
-            Row(
+            const Row(
               children: [
                 Expanded(
                   child: _BalanceInfoCard(
@@ -44,7 +44,7 @@ class BalanceCard extends StatelessWidget {
                     amount: '\$2,360.00',
                   ),
                 ),
-                const SizedBox(width: KSizes.smd),
+                SizedBox(width: KSizes.smd),
                 Expanded(
                   child: _BalanceInfoCard(
                     isPositive: false,

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/common/entities/user.dart';
-import '../../../../core/constants/profile_constants.dart';
 import '../../../../core/styles/sizes.dart';
 import '../bloc/profile_bloc.dart';
-import 'profile_input_drop_down_field.dart';
-import 'profile_input_text_field.dart';
+import '../../../../core/widgets/currency_input_drop_down_field.dart';
+import '../../../../core/widgets/input_text_field.dart';
 
 class ProfileForm extends StatefulWidget {
   final User user;
@@ -91,73 +90,92 @@ class ProfileFormState extends State<ProfileForm> {
                 TextButton(onPressed: () {}, child: const Text('Edit Photo')),
           ),
           const SizedBox(height: KSizes.md),
-          ProfileInputTextField(
-            labelText: 'First Name',
-            controller: _firstNameController,
-            onSaved: (value) {
-              _user = _user.copyWith(firstName: value);
-            },
-            onChanged: (value) {
-              _user = _user.copyWith(firstName: value);
-              _onChange(_user);
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your first name';
-              }
-              return null;
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: KSizes.md, vertical: KSizes.sm),
+            child: InputTextField(
+              labelText: 'First Name',
+              controller: _firstNameController,
+              onSaved: (value) {
+                _user = _user.copyWith(firstName: value);
+              },
+              onChanged: (value) {
+                _user = _user.copyWith(firstName: value);
+                _onChange(_user);
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your first name';
+                }
+                return null;
+              },
+            ),
           ),
-          ProfileInputTextField(
-            labelText: 'Last Name',
-            controller: _lastNameController,
-            onSaved: (value) {
-              _user = _user.copyWith(lastName: value);
-            },
-            onChanged: (value) {
-              _user = _user.copyWith(lastName: value);
-              _onChange(_user);
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: KSizes.md, vertical: KSizes.sm),
+            child: InputTextField(
+              labelText: 'Last Name',
+              controller: _lastNameController,
+              onSaved: (value) {
+                _user = _user.copyWith(lastName: value);
+              },
+              onChanged: (value) {
+                _user = _user.copyWith(lastName: value);
+                _onChange(_user);
+              },
+            ),
           ),
-          ProfileInputTextField(
-            labelText: 'Username',
-            controller: _usernameController,
-            onSaved: (value) {
-              _user = _user.copyWith(username: value);
-            },
-            onChanged: (value) {
-              _user = _user.copyWith(username: value);
-              _onChange(_user);
-            },
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a username';
-              }
-              return null;
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: KSizes.md, vertical: KSizes.sm),
+            child: InputTextField(
+              labelText: 'Username',
+              controller: _usernameController,
+              onSaved: (value) {
+                _user = _user.copyWith(username: value);
+              },
+              onChanged: (value) {
+                _user = _user.copyWith(username: value);
+                _onChange(_user);
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a username';
+                }
+                return null;
+              },
+            ),
           ),
-          ProfileInputTextField(
-            labelText: 'Phone Number',
-            controller: _phoneNumberController,
-            onSaved: (value) {
-              _user = _user.copyWith(phoneNumber: value);
-            },
-            onChanged: (value) {
-              _user = _user.copyWith(phoneNumber: value);
-              _onChange(_user);
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: KSizes.md, vertical: KSizes.sm),
+            child: InputTextField(
+              labelText: 'Phone Number',
+              controller: _phoneNumberController,
+              onSaved: (value) {
+                _user = _user.copyWith(phoneNumber: value);
+              },
+              onChanged: (value) {
+                _user = _user.copyWith(phoneNumber: value);
+                _onChange(_user);
+              },
+            ),
           ),
-          ProfileInputDropDownField(
-            labelText: 'Currency',
-            value: _selectedCurrency,
-            onChanged: (String? value) {
-              setState(() {
-                _selectedCurrency = value ?? _selectedCurrency;
-              });
-              _user = _user.copyWith(currency: _selectedCurrency);
-              _onChange(_user);
-            },
-            items: ProfileConstants.currencyMap,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: KSizes.md, vertical: KSizes.sm),
+            child: CurrencyInputDropDownField(
+              labelText: 'Currency',
+              value: _selectedCurrency,
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedCurrency = value ?? _selectedCurrency;
+                });
+                _user = _user.copyWith(currency: _selectedCurrency);
+                _onChange(_user);
+              },
+            ),
           ),
         ],
       ),

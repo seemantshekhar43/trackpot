@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trackpot/features/groups/presentation/pages/add_group.dart';
 
 import '../../../../core/styles/sizes.dart';
 import '../widgets/balance_card.dart';
@@ -66,7 +67,7 @@ class _GroupsPageState extends State<GroupsPage> {
         onPressed: () {},
         icon: const Icon(Icons.add),
         isExtended: _showExtendedFab,
-        label: const Text('Add Group'),
+        label: const Text('Add Expense'),
       ),
       body: SafeArea(
         child: CustomScrollView(
@@ -88,6 +89,9 @@ class _GroupsPageState extends State<GroupsPage> {
                                     fontWeight: FontWeight.w600,
                                   ),
                         ),
+                        IconButton(onPressed: (){
+                          Navigator.push(context, AddGroupPage.route());
+                        }, icon: const Icon(Icons.group_add, size: KSizes.iconMd,))
                       ],
                     ),
                   ),
