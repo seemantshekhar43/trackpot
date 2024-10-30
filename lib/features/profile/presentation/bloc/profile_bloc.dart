@@ -5,7 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/common/cubits/app_user/app_user_cubit.dart';
 import '../../../../core/common/entities/user.dart';
 import '../../../../core/exception/failure.dart';
-import '../../domain/repository/update_user_data.dart';
+import '../../domain/usecases/update_user_data.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';

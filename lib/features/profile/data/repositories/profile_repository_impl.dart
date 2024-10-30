@@ -4,7 +4,7 @@ import '../datasources/profile_remote_datasource.dart';
 import '../../../../core/common/entities/user.dart';
 import '../../../../core/exception/failure.dart';
 import '../../domain/repository/profile_repository.dart';
-import '../models/user_model.dart';
+import '../../../../core/common/models/user_model.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSource profileRemoteDataSource;

@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/exception/failure.dart';
-import '../../domain/repository/profile_repository.dart';
+import '../repository/profile_repository.dart';
 import '../../../../core/common/entities/user.dart';
 import '../../../../core/usecase/usecase.dart';
 

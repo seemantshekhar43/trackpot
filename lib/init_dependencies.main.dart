@@ -5,6 +5,7 @@ final serviceLocator = GetIt.instance;
 Future<void> initDependencies() async {
   _initAuth();
   _initProfile();
+  _initGroup();
 
   Client client = Client();
   client
@@ -23,6 +24,9 @@ Future<void> initDependencies() async {
   );
   serviceLocator
       .registerFactory<InternetConnection>(() => InternetConnection());
+
+  serviceLocator
+  .registerLazySingleton<Storage>(() => Storage(serviceLocator()));
 
   // core
 
@@ -97,5 +101,26 @@ void _initProfile() {
     ..registerFactory<UpdateUserData>(() => UpdateUserData(serviceLocator()))
     //bloc
     ..registerFactoryParam<ProfileBloc, User, void>((user, _) => ProfileBloc(
-        appUserCubit: serviceLocator(), updateUserData: serviceLocator(), initialUser: user));
+        appUserCubit: serviceLocator(),
+        updateUserData: serviceLocator(),
+        initialUser: user));
+}
+
+void _initGroup() {
+  serviceLocator
+    // datasource
+    ..registerLazySingleton<GroupRemoteDataSource>(
+        () => GroupRemoteDataSourceImpl(serviceLocator(), serviceLocator()))
+    // repository
+    ..registerLazySingleton<GroupRepository>(
+        () => GroupRepositoryImpl(serviceLocator()))
+    // usecases
+    ..registerLazySingleton<CreateGroup>(() => CreateGroup(serviceLocator()))
+    ..registerLazySingleton<GetUserGroups>(
+        () => GetUserGroups(serviceLocator()))
+    ..registerLazySingleton<GetUserBalanceStats>(
+        () => GetUserBalanceStats(serviceLocator()))
+    //cubit
+    ..registerFactory(() => CreateGroupCubit(
+        createGroup: serviceLocator(), appUserCubit: serviceLocator()));
 }

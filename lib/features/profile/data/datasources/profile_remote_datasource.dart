@@ -3,7 +3,7 @@ import 'package:appwrite/appwrite.dart';
 import '../../../../core/constants/appwrite_constants.dart';
 import '../../../../core/exception/server_exception.dart';
 import '../../../../core/secrets/app_secrets.dart';
-import '../models/user_model.dart';
+import '../../../../core/common/models/user_model.dart';
 
 abstract interface class ProfileRemoteDataSource {
   Future<void> updateUserData(UserModel user);

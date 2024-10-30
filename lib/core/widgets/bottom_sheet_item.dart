@@ -17,7 +17,7 @@ class BottomSheetItem extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(KSizes.lg),
+        borderRadius: BorderRadius.circular(KSizes.borderRadiusLg),
         child: Container(
           padding: const EdgeInsets.all(KSizes.md),
           decoration: BoxDecoration(
@@ -26,12 +26,13 @@ class BottomSheetItem extends StatelessWidget {
           ),
           child: Column(
             children: [
-              IconButton.filled(
-                onPressed: () {},
-                style: IconButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary),
+              Container(
                 padding: const EdgeInsets.all(KSizes.smd),
-                icon: Icon(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
                   icon,
                   size: KSizes.iconLg,
                   color: Theme.of(context).colorScheme.onPrimary,
