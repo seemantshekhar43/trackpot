@@ -132,7 +132,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
                                             BorderRadius.circular(KSizes.smd),
                                         child: Image.file(
                                           _imageFile!,
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.cover,
                                         ),
                                       )
                                     : Icon(

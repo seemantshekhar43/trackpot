@@ -5,6 +5,8 @@ import '../entities/group.dart' as group_entity;
 import '../entities/group_summary.dart';
 
 abstract class GroupRepository {
+  Future<Either<Failure, Stream<List<GroupSummary>>>> watchUserGroups(
+      String userId);
   Future<Either<Failure, List<GroupSummary>>> getUserGroups(String userId);
   Future<Either<Failure, group_entity.Group>> createGroup(
       group_entity.Group group);

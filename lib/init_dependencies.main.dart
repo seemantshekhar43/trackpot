@@ -22,11 +22,16 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton<Databases>(
     () => Databases(serviceLocator()),
   );
+
+  serviceLocator.registerLazySingleton<Realtime>(
+    () => Realtime(serviceLocator()),
+  );
+
   serviceLocator
       .registerFactory<InternetConnection>(() => InternetConnection());
 
   serviceLocator
-  .registerLazySingleton<Storage>(() => Storage(serviceLocator()));
+      .registerLazySingleton<Storage>(() => Storage(serviceLocator()));
 
   // core
 
@@ -39,6 +44,12 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton<AppUserCubit>(
     () => AppUserCubit(),
   );
+
+  // file
+  serviceLocator.registerLazySingleton<FileRemoteDataSource>(
+      () => FileRemoteDatasourceImpl(storage: serviceLocator()));
+  serviceLocator.registerLazySingleton<FileRepository>(
+      () => FileRepositoryImpl(remoteDataSource: serviceLocator()));
 }
 
 void _initAuth() {
@@ -109,18 +120,24 @@ void _initProfile() {
 void _initGroup() {
   serviceLocator
     // datasource
-    ..registerLazySingleton<GroupRemoteDataSource>(
-        () => GroupRemoteDataSourceImpl(serviceLocator(), serviceLocator()))
+    ..registerLazySingleton<GroupRemoteDataSource>(() =>
+        GroupRemoteDataSourceImpl(
+            serviceLocator(), serviceLocator(), serviceLocator()))
     // repository
     ..registerLazySingleton<GroupRepository>(
         () => GroupRepositoryImpl(serviceLocator()))
     // usecases
     ..registerLazySingleton<CreateGroup>(() => CreateGroup(serviceLocator()))
+    ..registerLazySingleton<WatchUserGroups>(
+        () => WatchUserGroups(serviceLocator()))
     ..registerLazySingleton<GetUserGroups>(
         () => GetUserGroups(serviceLocator()))
     ..registerLazySingleton<GetUserBalanceStats>(
         () => GetUserBalanceStats(serviceLocator()))
     //cubit
-    ..registerFactory(() => CreateGroupCubit(
-        createGroup: serviceLocator(), appUserCubit: serviceLocator()));
+    ..registerFactory<CreateGroupCubit>(() => CreateGroupCubit(
+        createGroup: serviceLocator(), appUserCubit: serviceLocator()))
+    //bloc
+    ..registerFactory<GroupBloc>(() => GroupBloc(serviceLocator(),
+        serviceLocator(), serviceLocator(), serviceLocator()));
 }

@@ -40,6 +40,7 @@ class GroupRepositoryImpl implements GroupRepository {
           role: GroupMemberRole.admin,
           joinedAt: DateTime.now());
       groupData['members'] = [member.toMap()];
+      groupData['memberIds'] = [member.userId];
       final result = await groupRemoteDataSource.createGroup(groupData);
       return right(GroupModel.fromMap(result));
     } on ServerException catch (e) {
@@ -55,9 +56,35 @@ class GroupRepositoryImpl implements GroupRepository {
   }
 
   @override
-  Future<Either<Failure, List<GroupSummary>>> getUserGroups(String userId) {
-    // TODO: implement getUserGroups
-    throw UnimplementedError();
+  Future<Either<Failure, Stream<List<GroupSummary>>>> watchUserGroups(
+      String userId) async {
+    try {
+      final Stream<List<Map<String, dynamic>>> stream =
+          groupRemoteDataSource.watchUserGroups(userId);
+      final groupSummaryStream = stream.asyncMap((groupsMap) => Future.wait(
+          groupsMap
+              .map((groupMap) => GroupModel.fromMap(groupMap))
+              .map((group) async => GroupSummary.fromGroupEntity(group))));
+      return right(groupSummaryStream);
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GroupSummary>>> getUserGroups(
+      String userId) async {
+    try {
+      final List<Map<String, dynamic>> groupsMap =
+          await groupRemoteDataSource.getUserGroups(userId);
+      final groupSummaries = groupsMap
+          .map((groupMap) => GroupModel.fromMap(groupMap))
+          .map((group) => GroupSummary.fromGroupEntity(group))
+          .toList();
+      return right(groupSummaries);
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
   }
 
   @override

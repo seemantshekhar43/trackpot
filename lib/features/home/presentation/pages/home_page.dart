@@ -40,7 +40,10 @@ class _HomePageState extends State<HomePage> {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          body: pages[state.index],
+          body: IndexedStack(
+            index: state.index,
+            children: pages,
+          ),
           bottomNavigationBar: NavigationBar(
             destinations: _navigationDestinations,
             selectedIndex: state.index,

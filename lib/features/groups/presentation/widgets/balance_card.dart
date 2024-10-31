@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:trackpot/core/styles/sizes.dart';
+import '../../../../core/styles/sizes.dart';
+import '../../../../core/utils/finance_utils.dart';
 
 class BalanceCard extends StatelessWidget {
-  const BalanceCard({super.key});
+  final double totalOwed;
+  final double totalOwedTo;
 
+  const BalanceCard({
+    super.key,
+    required this.totalOwed,
+    required this.totalOwedTo,
+  });
   @override
   Widget build(BuildContext context) {
+    final netBalance = totalOwedTo - totalOwed;
     return Card(
       elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal:KSizes.md),
+        padding: const EdgeInsets.symmetric(horizontal: KSizes.md),
         child: Column(
           children: [
             Row(
@@ -17,17 +25,16 @@ class BalanceCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Total Balance',
-                      style: Theme.of(context).textTheme.bodyLarge
-                    ),
+                    Text('Total Balance',
+                        style: Theme.of(context).textTheme.bodyLarge),
                     const SizedBox(height: 4),
                     Text(
-                      '\$1,248.00',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green[600],
-                      ),
+                      FinanceUtils.formatAmount(netBalance.abs()),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green[600],
+                              ),
                     ),
                   ],
                 ),
@@ -35,21 +42,21 @@ class BalanceCard extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             // Owed and Owe Section
-            const Row(
+            Row(
               children: [
                 Expanded(
                   child: _BalanceInfoCard(
                     isPositive: true,
                     label: 'You are owed',
-                    amount: '\$2,360.00',
+                    amount: FinanceUtils.formatAmount(totalOwedTo),
                   ),
                 ),
-                SizedBox(width: KSizes.smd),
+                const SizedBox(width: KSizes.smd),
                 Expanded(
                   child: _BalanceInfoCard(
                     isPositive: false,
                     label: 'You owe',
-                    amount: '\$1,112.00',
+                    amount: FinanceUtils.formatAmount(totalOwed),
                   ),
                 ),
               ],
@@ -96,16 +103,17 @@ class _BalanceInfoCard extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: color[700]
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: color[700]),
               ),
               Text(
                 amount,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: color[700],
-                ),
+                      fontWeight: FontWeight.w600,
+                      color: color[700],
+                    ),
               ),
             ],
           ),
