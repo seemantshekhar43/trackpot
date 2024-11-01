@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../core/styles/sizes.dart';
+import '../../../../core/utils/finance_utils.dart';
 import '../../domain/entities/group_summary.dart';
 import 'group_avatar.dart';
 
-class GroupTile extends StatelessWidget {
+class GroupTile extends StatefulWidget {
   final GroupSummary group;
 
   const GroupTile({
@@ -13,17 +14,18 @@ class GroupTile extends StatelessWidget {
     required this.group,
   });
 
-  String _formatBalance(double balance) {
-    final isPositive = balance >= 0;
-    return '${isPositive ? '+' : ''}\$${balance.abs().toStringAsFixed(2)}';
-  }
+  @override
+  State<GroupTile> createState() => _GroupTileState();
+}
 
-  Color _getBalanceColor(BuildContext context, double balance) {
-    return balance >= 0 ? Colors.green[600]! : Colors.red[600]!;
-  }
+class _GroupTileState extends State<GroupTile>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Card(
       elevation: 0,
       child: Padding(
@@ -36,8 +38,8 @@ class GroupTile extends StatelessWidget {
           children: [
             // Group Icon
             GroupAvatar(
-              imageId: group.groupPic,
-              category: group.category,
+              imageId: widget.group.groupPic,
+              category: widget.group.category,
             ),
             const SizedBox(width: KSizes.smd),
             // Group Details
@@ -46,7 +48,7 @@ class GroupTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    group.name,
+                    widget.group.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
@@ -62,25 +64,25 @@ class GroupTile extends StatelessWidget {
                       ),
                       const SizedBox(width: KSizes.xs),
                       Text(
-                        _formatBalance(group.userBalance),
+                        FinanceUtils.formatAmount(widget.group.userBalance),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color:
-                                  _getBalanceColor(context, group.userBalance),
+                              color: FinanceUtils.getBalanceColor(
+                                  widget.group.userBalance),
                               fontWeight: FontWeight.w600,
                             ),
                       ),
                     ],
                   ),
-                  if (group.latestExpense != null) ...[
+                  if (widget.group.latestExpense != null) ...[
                     const SizedBox(height: KSizes.xs),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Text(
-                            '${group.latestExpense!.paidBy.username} paid '
-                            '\$${group.latestExpense!.amount.toStringAsFixed(2)} for '
-                            '${group.latestExpense!.description}',
+                            '${widget.group.latestExpense!.paidBy.username} paid '
+                            '\$${widget.group.latestExpense!.amount.toStringAsFixed(2)} for '
+                            '${widget.group.latestExpense!.description}',
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: Colors.grey[600],
@@ -91,7 +93,7 @@ class GroupTile extends StatelessWidget {
                         ),
                         const SizedBox(width: KSizes.sm),
                         Text(
-                          timeago.format(group.latestExpense!.createdAt),
+                          timeago.format(widget.group.latestExpense!.createdAt),
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Colors.grey[600],

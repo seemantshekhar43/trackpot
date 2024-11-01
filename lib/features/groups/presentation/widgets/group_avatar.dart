@@ -7,7 +7,7 @@ import '../../../../core/common/features/domain/repository/file_repository.dart'
 import '../../../../core/constants/group_constants.dart';
 import '../../../../core/styles/sizes.dart';
 
-class GroupAvatar extends StatelessWidget {
+class GroupAvatar extends StatefulWidget {
   final String? imageId;
   final String? category;
 
@@ -18,16 +18,46 @@ class GroupAvatar extends StatelessWidget {
   });
 
   @override
+  State<GroupAvatar> createState() => _GroupAvatarState();
+}
+
+class _GroupAvatarState extends State<GroupAvatar> {
+  Future<Uint8List?>? _imageFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  @override
+  void didUpdateWidget(GroupAvatar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.imageId != oldWidget.imageId) {
+      _loadImage();
+    }
+  }
+
+  void _loadImage() {
+    if (widget.imageId != null) {
+      _imageFuture = context
+          .read<FileRepository>()
+          .getGroupPicById(groupPicId: widget.imageId!);
+    } else {
+      _imageFuture = null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // If no imageId, show fallback immediately
-    if (imageId == null) {
+    if (widget.imageId == null) {
       return _buildFallbackAvatar(context);
     }
 
     // Try to load image
     return FutureBuilder<Uint8List?>(
-      future:
-          context.read<FileRepository>().getGroupPicById(groupPicId: imageId!),
+      future: _imageFuture,
       builder: (context, snapshot) {
         // Show image if available
         if (snapshot.hasData && snapshot.data != null) {
@@ -65,7 +95,7 @@ class GroupAvatar extends StatelessWidget {
               Theme.of(context).colorScheme.onInverseSurface.withOpacity(0.9),
           borderRadius: BorderRadius.circular(KSizes.smd)),
       child: Icon(
-        _getIconForCategory(category),
+        _getIconForCategory(widget.category),
         size: KSizes.iconLg,
         color: Theme.of(context).colorScheme.primary,
       ),

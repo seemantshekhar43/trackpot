@@ -29,11 +29,11 @@ class BalanceCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyLarge),
                     const SizedBox(height: 4),
                     Text(
-                      FinanceUtils.formatAmount(netBalance.abs()),
+                      FinanceUtils.formatAmount(netBalance),
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green[600],
+                                color: FinanceUtils.getBalanceColor(netBalance),
                               ),
                     ),
                   ],

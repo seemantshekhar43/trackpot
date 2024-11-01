@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'expense_summary.dart';
 import 'group.dart';
 
@@ -22,7 +24,7 @@ class GroupSummary {
     return GroupSummary(
         groupId: group.id,
         name: group.name,
-        userBalance: 0,
+        userBalance: Random().nextInt(201) - 100,
         groupPic: group.groupPic ?? '',
         latestExpense: ExpenseSummary(
             description: 'Movie night',
