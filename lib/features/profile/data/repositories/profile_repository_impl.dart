@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/exception/server_exception.dart';
 import '../datasources/profile_remote_datasource.dart';
@@ -26,6 +28,28 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
       await profileRemoteDataSource.updateUserData(userModel);
       return right(null);
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateUserProfilePic({required File file, required User user}) async {
+    try {
+      final profilePicId = await profileRemoteDataSource.uploadProfilePicture(file);
+      final userModel = UserModel(
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        username: user.username,
+        location: user.location,
+        currency: user.currency,
+        profilePicture: profilePicId,
+      );
+      await profileRemoteDataSource.updateUserData(userModel);
+      return right(profilePicId);
     } on ServerException catch (e) {
       return left(Failure(message: e.message));
     }

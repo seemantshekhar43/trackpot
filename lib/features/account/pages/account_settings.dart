@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/constants/profile_constants.dart';
 import '../../../core/styles/sizes.dart';
 import '../../auth/presentation/bloc/auth_bloc.dart';
+import '../widgets/profile_avatar.dart';
 import '../widgets/section_heading.dart';
 import '../widgets/settings_list_item.dart';
 
@@ -32,12 +34,11 @@ class AccountSettingsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Center(
-                      child: CircleAvatar(
-                        radius: KSizes.circleImageAvatarRadiusSize,
-                        backgroundImage: AssetImage('assets/images/user.png'),
-                      ),
-                    ),
+                    Center(
+                        child: ProfileAvatar(
+                      imageId: user.profilePicture,
+                      userInitials: ProfileConstants.userInitials(firstName: user.firstName),
+                    )),
                     const SizedBox(
                       height: KSizes.smd,
                     ),

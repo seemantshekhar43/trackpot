@@ -1,5 +1,3 @@
-import '../secrets/app_secrets.dart';
-
 class AppwriteConstants {
   const AppwriteConstants._();
 
@@ -10,7 +8,5 @@ class AppwriteConstants {
 
   //storage buckets
   static const String groupPicBucket = '6721df4400158e0e7d4a';
-
-  static String groupPicUrl(String fileId) =>
-      '${AppSecrets.endPoint}/storage/buckets/$groupPicBucket/files/$fileId/view?project=${AppSecrets.projectId}&mode=admin';
+  static const String profilePicBucket = '6721df230027e4de6054';
 }

@@ -159,4 +159,7 @@ class ProfileConstants {
     "ZMK": "ZK",
     "ZWR": "Z\$",
   };
+
+  static String userInitials({required String firstName}) =>
+      firstName.substring(0, 1);
 }

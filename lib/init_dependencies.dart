@@ -16,6 +16,7 @@ import 'package:trackpot/features/groups/presentation/cubit/create_group_cubit.d
 import 'package:trackpot/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:trackpot/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:trackpot/features/profile/domain/repository/profile_repository.dart';
+import 'package:trackpot/features/profile/domain/usecases/update_profile_pic.dart';
 import 'package:trackpot/features/profile/domain/usecases/update_user_data.dart';
 import 'package:trackpot/features/profile/presentation/bloc/profile_bloc.dart';
 import 'features/auth/domain/usecases/user_log_out.dart';

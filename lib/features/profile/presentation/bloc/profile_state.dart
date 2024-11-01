@@ -15,9 +15,16 @@ final class ProfileInitial extends ProfileState {
 class ProfileSaving extends ProfileState {
   const ProfileSaving(super.user);
 }
+class ProfilePicSaving extends ProfileState {
+  const ProfilePicSaving(super.user);
+}
 
 class ProfileSaved extends ProfileState {
   const ProfileSaved(super.user);
+}
+
+class ProfilePicSaved extends ProfileState {
+  const ProfilePicSaved(super.user);
 }
 
 class ProfileChanged extends ProfileState {

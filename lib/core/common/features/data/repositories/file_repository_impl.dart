@@ -27,4 +27,9 @@ class FileRepositoryImpl implements FileRepository{
     return getFileById(bucketId: AppwriteConstants.groupPicBucket, fileId: groupPicId);
   }
 
+  @override
+  Future<Uint8List?> getProfilePicById({required String profilePicId}) {
+    return getFileById(bucketId: AppwriteConstants.profilePicBucket, fileId: profilePicId);
+  }
+
 }

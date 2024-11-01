@@ -103,17 +103,22 @@ void _initAuth() {
 void _initProfile() {
   serviceLocator
     // dataSource
-    ..registerFactory<ProfileRemoteDataSource>(
-        () => ProfileRemoteDataSourceImpl(appwriteDB: serviceLocator()))
+    ..registerFactory<ProfileRemoteDataSource>(() =>
+        ProfileRemoteDataSourceImpl(
+            appwriteDB: serviceLocator(), storage: serviceLocator()))
     //repository
     ..registerFactory<ProfileRepository>(
         () => ProfileRepositoryImpl(profileRemoteDataSource: serviceLocator()))
     //usecases
     ..registerFactory<UpdateUserData>(() => UpdateUserData(serviceLocator()))
+    ..registerFactory<UpdateProfilePic>(
+        () => UpdateProfilePic(serviceLocator()))
+
     //bloc
     ..registerFactoryParam<ProfileBloc, User, void>((user, _) => ProfileBloc(
         appUserCubit: serviceLocator(),
         updateUserData: serviceLocator(),
+        updateProfilePic: serviceLocator(),
         initialUser: user));
 }
 

@@ -85,6 +85,13 @@ class ProfilePage extends StatelessWidget {
                             content: Text('Profile updated successfully!')),
                       );
                     }
+                    if (state is ProfilePicSaved) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text('Profile picture updated successfully!')),
+                      );
+                    }
                   },
                   child: ProfileForm(user),
                 ),

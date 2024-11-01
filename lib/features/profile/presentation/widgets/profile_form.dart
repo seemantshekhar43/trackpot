@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/common/entities/user.dart';
+import '../../../../core/constants/profile_constants.dart';
 import '../../../../core/styles/sizes.dart';
+import '../../../../core/widgets/camera_bottom_sheet.dart';
+import '../../../account/widgets/profile_avatar.dart';
 import '../bloc/profile_bloc.dart';
 import '../../../../core/widgets/currency_input_drop_down_field.dart';
 import '../../../../core/widgets/input_text_field.dart';
@@ -23,6 +28,7 @@ class ProfileFormState extends State<ProfileForm> {
   late TextEditingController _usernameController;
   late TextEditingController _phoneNumberController;
   String _selectedCurrency = '';
+  File? _imageFile;
 
   @override
   void initState() {
@@ -57,37 +63,27 @@ class ProfileFormState extends State<ProfileForm> {
       child: Column(
         children: [
           Center(
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                const CircleAvatar(
-                  radius: KSizes.circleImageAvatarRadiusSize,
-                  backgroundImage: AssetImage('assets/images/user.png'),
-                ),
-                Positioned(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.surface,
-                        width: KSizes.borderRadiusXSm,
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(KSizes.sm),
-                    child: const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                      size: KSizes.iconSm,
-                    ),
-                  ),
-                ),
-              ],
+            child: ProfileAvatar(
+              imageId: _user.profilePicture,
+              userInitials:
+                  ProfileConstants.userInitials(firstName: _user.firstName),
+              imageFile: _imageFile,
             ),
           ),
           Center(
-            child:
-                TextButton(onPressed: () {}, child: const Text('Edit Photo')),
+            child: TextButton(
+                onPressed: () async {
+                  final selectedImage =
+                      await showPhotoSelectionBottomSheet(context);
+                  setState(() {
+                    _imageFile = selectedImage;
+                  });
+                  if (context.mounted && selectedImage != null) {
+                    context.read<ProfileBloc>().add(ChangeProfilePictureEvent(
+                        updatedProfilePic: selectedImage));
+                  }
+                },
+                child: const Text('Edit Photo')),
           ),
           const SizedBox(height: KSizes.md),
           Padding(

@@ -11,3 +11,9 @@ class ChangeProfileEvent extends ProfileEvent {
 
   ChangeProfileEvent({required this.changedUser});
 }
+
+class ChangeProfilePictureEvent extends ProfileEvent {
+  final File updatedProfilePic;
+
+  ChangeProfilePictureEvent({required this.updatedProfilePic});
+}
