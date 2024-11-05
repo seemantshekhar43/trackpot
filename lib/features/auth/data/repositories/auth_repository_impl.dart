@@ -1,5 +1,6 @@
 import 'package:appwrite/models.dart' as appwrite;
 import 'package:fpdart/fpdart.dart';
+import 'package:trackpot/core/common/models/user_model.dart';
 import '../../../../core/exception/appwrite_custom_exception.dart';
 import '../../../../core/common/entities/user.dart';
 import '../../../../core/constants/exception_constants.dart';
@@ -75,9 +76,9 @@ class AuthRepositoryImpl implements AuthRepository {
       if (!await (networkConnectionChecker.isConnected)) {
         return left(Failure(message: ExceptionConstants.noNetworkConnection));
       }
-      final User user = await remoteDataSource.getCurrentUserDetails(id);
+      final UserModel user = await remoteDataSource.getCurrentUserDetails(id);
 
-      return right(user);
+      return right(user.toEntity());
     } on AppwriteDocumentNotFoundException catch (e) {
       return left(Failure(
           type: ExceptionConstants.userDoesNotExist, message: e.message));

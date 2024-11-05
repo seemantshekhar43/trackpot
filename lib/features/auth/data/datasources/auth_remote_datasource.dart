@@ -1,10 +1,10 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as appwrite_model;
+import 'package:trackpot/core/common/models/user_model.dart';
+import '../../../../../core/exception/server_exception.dart';
+import '../../../../core/constants/appwrite_constants.dart';
 import '../../../../core/constants/appwrite_exception_types_constants.dart';
 import '../../../../core/exception/appwrite_custom_exception.dart';
-import '../../../../../core/exception/server_exception.dart';
-import '../../../../core/common/entities/user.dart';
-import '../../../../core/constants/appwrite_constants.dart';
 import '../../../../core/secrets/app_secrets.dart';
 
 abstract interface class AuthRemoteDataSource {
@@ -17,15 +17,14 @@ abstract interface class AuthRemoteDataSource {
     required String password,
   });
   Future<appwrite_model.User?> getCurrentUser();
-  Future<User> getCurrentUserDetails(String id);
+  Future<UserModel> getCurrentUserDetails(String id);
   Future<void> deleteCurrentSession();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Account _appwriteAccount;
   final Databases _appwriteDB;
-  AuthRemoteDataSourceImpl(
-      Account appwriteAccount, Databases appwriteDB)
+  AuthRemoteDataSourceImpl(Account appwriteAccount, Databases appwriteDB)
       : _appwriteAccount = appwriteAccount,
         _appwriteDB = appwriteDB;
 
@@ -75,14 +74,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<User> getCurrentUserDetails(String id) async {
+  Future<UserModel> getCurrentUserDetails(String id) async {
     try {
       final appwrite_model.Document document = await _appwriteDB.getDocument(
         databaseId: AppSecrets.databaseId,
         collectionId: AppwriteConstants.usersCollection,
         documentId: id,
       );
-      return User.fromMap(document.data);
+      return UserModel.fromMap(document.data);
     } on AppwriteException catch (e) {
       if (AppwriteExceptionTypesConstants.documentNotFound == e.type) {
         throw AppwriteDocumentNotFoundException(

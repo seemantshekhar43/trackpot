@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'core/common/features/domain/repository/file_repository.dart';
+import 'core/common/features/files/domain/repository/file_repository.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'app.dart';
 import 'core/common/cubits/app_user/app_user_cubit.dart';

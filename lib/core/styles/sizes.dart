@@ -32,6 +32,8 @@ class KSizes {
   // Image sizes
   static const double imageThumbSize = 80.0;
   static const double circleImageAvatarRadiusSize = 60.0;
+  static const double listItemCircleImageAvatarRadiusSize = 30.0;
+
 
   // Default spacing between sections
   static const double defaultSpace = 24.0;

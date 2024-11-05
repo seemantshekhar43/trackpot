@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/profile_constants.dart';
 import '../../../core/styles/sizes.dart';
+import '../../../core/widgets/list_divider.dart';
 import '../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/profile_avatar.dart';
-import '../widgets/section_heading.dart';
+import '../../../core/widgets/section_heading.dart';
 import '../widgets/settings_list_item.dart';
 
 import '../../../core/common/cubits/app_user/app_user_cubit.dart';
@@ -73,7 +74,7 @@ class AccountSettingsPage extends StatelessWidget {
                       onTap: () =>
                           {Navigator.push(context, ProfilePage.route())},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     const Padding(
                       padding: EdgeInsets.all(KSizes.md),
                       child: SectionHeading(label: 'Preferences'),
@@ -83,19 +84,19 @@ class AccountSettingsPage extends StatelessWidget {
                       title: 'Push notification',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.email,
                       title: 'Email notifications',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.brightness_6_rounded,
                       title: 'App theme',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     const Padding(
                       padding: EdgeInsets.all(KSizes.md),
                       child: SectionHeading(label: 'Security'),
@@ -105,25 +106,25 @@ class AccountSettingsPage extends StatelessWidget {
                       title: 'Screen lock',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.key,
                       title: 'Change password',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.star_rate_outlined,
                       title: 'Rate Trackpot',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.favorite_border,
                       title: 'Tell a friend',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     const Padding(
                       padding: EdgeInsets.all(KSizes.md),
                       child: SectionHeading(label: 'Trackpot'),
@@ -133,25 +134,25 @@ class AccountSettingsPage extends StatelessWidget {
                       title: 'About us',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.star_rate_outlined,
                       title: 'Rate Trackpot',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.favorite_border,
                       title: 'Tell a friend',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     SettingsListItem(
                       icon: Icons.mail,
                       title: 'Trackpot Support',
                       onTap: () => {},
                     ),
-                    const Divider(),
+                    const ListDivider(),
                     const SizedBox(
                       height: KSizes.sm,
                     ),

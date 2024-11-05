@@ -162,4 +162,9 @@ class ProfileConstants {
 
   static String userInitials({required String firstName}) =>
       firstName.substring(0, 1);
+
+  static String displayName({required String firstName, String? lastName}) =>
+      (lastName == null || lastName.trim().isEmpty)
+          ? firstName
+          : '$firstName $lastName';
 }

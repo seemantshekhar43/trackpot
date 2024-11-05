@@ -5,6 +5,7 @@ final serviceLocator = GetIt.instance;
 Future<void> initDependencies() async {
   _initAuth();
   _initProfile();
+  _initDashboard();
   _initGroup();
 
   Client client = Client();
@@ -122,15 +123,19 @@ void _initProfile() {
         initialUser: user));
 }
 
-void _initGroup() {
+void _initDashboard() {
   serviceLocator
     // datasource
     ..registerLazySingleton<GroupRemoteDataSource>(() =>
         GroupRemoteDataSourceImpl(
             serviceLocator(), serviceLocator(), serviceLocator()))
+    ..registerLazySingleton<GroupMemoryCacheDataSource>(
+        () => GroupMemoryCacheDataSourceImpl())
     // repository
-    ..registerLazySingleton<GroupRepository>(
-        () => GroupRepositoryImpl(serviceLocator()))
+    ..registerLazySingleton<GroupRepository>(() => GroupRepositoryImpl(
+        groupRemoteDataSource: serviceLocator(),
+        groupMemoryCacheDataSource: serviceLocator(),
+        networkConnectionChecker: serviceLocator()))
     // usecases
     ..registerLazySingleton<CreateGroup>(() => CreateGroup(serviceLocator()))
     ..registerLazySingleton<WatchUserGroups>(
@@ -139,10 +144,23 @@ void _initGroup() {
         () => GetUserGroups(serviceLocator()))
     ..registerLazySingleton<GetUserBalanceStats>(
         () => GetUserBalanceStats(serviceLocator()))
+    ..registerLazySingleton<UpdateGroup>(() => UpdateGroup(serviceLocator()))
     //cubit
     ..registerFactory<CreateGroupCubit>(() => CreateGroupCubit(
-        createGroup: serviceLocator(), appUserCubit: serviceLocator()))
+        createGroup: serviceLocator<CreateGroup>(),
+        appUserCubit: serviceLocator<AppUserCubit>(),
+        updateGroup: serviceLocator<UpdateGroup>()))
     //bloc
-    ..registerFactory<GroupBloc>(() => GroupBloc(serviceLocator(),
+    ..registerFactory<DashboardBloc>(() => DashboardBloc(serviceLocator(),
         serviceLocator(), serviceLocator(), serviceLocator()));
+}
+
+void _initGroup() {
+  serviceLocator
+    //usecases
+    ..registerFactory<WatchGroupById>(() => WatchGroupById(serviceLocator()))
+
+    //bloc
+    ..registerFactory<GroupBloc>(
+        () => GroupBloc(watchGroupById: serviceLocator()));
 }
