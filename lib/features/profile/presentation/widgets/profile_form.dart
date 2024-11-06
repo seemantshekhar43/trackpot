@@ -64,6 +64,7 @@ class ProfileFormState extends State<ProfileForm> {
         children: [
           Center(
             child: ProfileAvatar(
+              radius: KSizes.circleImageAvatarRadiusSize,
               imageId: _user.profilePicture,
               userInitials:
                   ProfileConstants.userInitials(firstName: _user.firstName),

@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trackpot/features/dashboard/domain/entities/group_member.dart';
 
 import '../../../../../core/common/cubits/app_user/app_user_cubit.dart';
 import '../../../../../core/constants/group_member_role.dart';
 import '../../../../dashboard/domain/entities/group.dart';
+import '../../../../dashboard/domain/entities/group_member.dart';
 import '../../../../dashboard/domain/usecases/create_group.dart';
 import '../../../domain/usecases/update_group.dart';
 
@@ -16,9 +16,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   final AppUserCubit appUserCubit;
 
   CreateGroupCubit({
-    required createGroup,
+    required CreateGroup createGroup,
     required this.appUserCubit,
-    required updateGroup,
+    required UpdateGroup updateGroup,
   })  : _createGroup = createGroup,
         _updateGroup = updateGroup,
         super(const CreateGroupInitial());
@@ -34,23 +34,24 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
     final user = (appUserCubit.state as AppUserAuthenticated).user;
     final currentTime = DateTime.now();
     final group = Group(
-      id: '', // Will be set by Appwrite
-      name: name,
-      category: category,
-      groupPic: groupPic,
-      currency: defaultCurrency,
-      createdAt: currentTime,
-      createdBy: user,
-      members: [
-        GroupMember(
-            id: '',
-            groupId: '',
-            user: user,
-            role: GroupMemberRole.admin,
-            joinedAt: currentTime)
-      ],
-      memberIds: [user.id]
-    );
+        id: '', // Will be set by Appwrite
+        name: name,
+        category: category,
+        groupPic: groupPic,
+        currency: defaultCurrency,
+        createdAt: currentTime,
+        createdBy: user,
+        members: [
+          GroupMember(
+              id: '',
+              groupId: '',
+              user: user,
+              role: GroupMemberRole.admin,
+              joinedAt: currentTime)
+        ],
+        memberIds: [
+          user.id
+        ]);
 
     final createdGroup = await _createGroup(group);
     createdGroup.fold(

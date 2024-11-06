@@ -4,9 +4,11 @@ final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   _initAuth();
+  _initUsers();
   _initProfile();
   _initDashboard();
   _initGroup();
+  _initAddMember();
 
   Client client = Client();
   client
@@ -163,4 +165,29 @@ void _initGroup() {
     //bloc
     ..registerFactory<GroupBloc>(
         () => GroupBloc(watchGroupById: serviceLocator()));
+}
+
+void _initAddMember() {
+  serviceLocator
+    //usecases
+    ..registerFactory<GetAllUsers>(() => GetAllUsers(serviceLocator()))
+    ..registerFactory<AddMember>(() => AddMember(serviceLocator()))
+
+    //cubit
+    ..registerFactoryParam<AddMembersCubit, Group, void>(
+        (group, _) => AddMembersCubit(
+              getAllUsers: serviceLocator(),
+              addMember: serviceLocator(),
+              group: group,
+            ));
+}
+
+void _initUsers() {
+  serviceLocator
+    //datasources
+    ..registerFactory<UsersRemoteDatasource>(
+        () => UsersRemoteDatasourceImpl(db: serviceLocator()))
+    // repository
+    ..registerFactory<UsersRepository>(
+        () => UsersRepositoryImpl(usersRemoteDatasource: serviceLocator()));
 }

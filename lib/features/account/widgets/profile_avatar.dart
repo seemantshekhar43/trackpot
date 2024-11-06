@@ -4,20 +4,20 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/common/features/files/domain/repository/file_repository.dart';
-import '../../../../core/styles/sizes.dart';
+import '../../../core/styles/sizes.dart';
 
 class ProfileAvatar extends StatefulWidget {
   final String? imageId;
   final String userInitials;
   final File? imageFile;
-  final double radius;
+  final double? radius;
 
   const ProfileAvatar(
       {super.key,
       this.imageId,
       this.imageFile,
       required this.userInitials,
-      this.radius = KSizes.circleImageAvatarRadiusSize});
+      this.radius});
 
   @override
   State<ProfileAvatar> createState() => _ProfileAvatarState();
@@ -63,7 +63,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
                 ? MemoryImage(snapshot.data!)
                 : null;
         return CircleAvatar(
-          radius: widget.radius,
+          radius: widget.radius ?? KSizes.listItemCircleImageAvatarRadiusSize,
           backgroundColor:
               Theme.of(context).colorScheme.onInverseSurface.withOpacity(0.9),
           foregroundColor:
@@ -75,7 +75,9 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
                   widget.userInitials.toUpperCase(),
                   style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                       color: Theme.of(context).colorScheme.primary,
-                      fontSize: widget.radius * 0.8),
+                      fontSize: (widget.radius ??
+                              KSizes.listItemCircleImageAvatarRadiusSize) *
+                          0.8),
                 ),
         );
       },

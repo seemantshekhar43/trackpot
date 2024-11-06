@@ -12,6 +12,8 @@ abstract class GroupRepository {
       group_entity.Group group);
   Future<Either<Failure, group_entity.Group>> updateGroup(
       group_entity.Group group, String? groupPic);
+  Future<Either<Failure, group_entity.Group>> addMember(
+      group_entity.Group group);
   Future<Either<Failure, double>> getUserTotalBalance(String userId);
   Future<Either<Failure, Map<String, double>>> getUserBalanceStats(
       String userId);

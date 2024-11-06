@@ -261,4 +261,14 @@ class GroupRepositoryImpl implements GroupRepository {
       return left(Failure(message: e.message));
     }
   }
+  @override
+  Future<Either<Failure, group_entity.Group>> addMember(group_entity.Group group) async {
+    try {
+      final groupData = GroupModel.fromEntity(group);
+      final result = await groupRemoteDataSource.updateGroup(groupData);
+      return right(result.toEntity());
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
 }

@@ -38,6 +38,7 @@ class AccountSettingsPage extends StatelessWidget {
                     Center(
                         child: ProfileAvatar(
                       imageId: user.profilePicture,
+                      radius: KSizes.circleImageAvatarRadiusSize,
                       userInitials: ProfileConstants.userInitials(firstName: user.firstName),
                     )),
                     const SizedBox(

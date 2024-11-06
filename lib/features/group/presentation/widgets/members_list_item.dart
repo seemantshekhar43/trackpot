@@ -4,15 +4,21 @@ class MembersListItem extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget leadingWidget;
-  final VoidCallback onTap;
+  final Widget? trailing;
+  final VoidCallback? onTap;
   final bool isDense;
+  final Color? tileColor;
+  final bool isSelected;
   const MembersListItem(
       {super.key,
       required this.title,
-        this.subtitle,
+      this.subtitle,
+      this.trailing,
       required this.leadingWidget,
-        this.isDense = false,
-      required this.onTap});
+      this.isDense = false,
+      this.isSelected = false,
+      this.tileColor,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,10 @@ class MembersListItem extends StatelessWidget {
       dense: isDense,
       leading: leadingWidget,
       title: Text(title),
-      subtitle: subtitle != null ? Text(subtitle!): null,
+      trailing: trailing,
+      tileColor: tileColor,
+      selected: isSelected,
+      subtitle: subtitle != null ? Text(subtitle!) : null,
       onTap: onTap,
     );
   }

@@ -7,6 +7,7 @@ import '../../../../core/styles/sizes.dart';
 import '../../../../core/widgets/list_divider.dart';
 import '../../../../core/widgets/section_heading.dart';
 import '../../../account/widgets/profile_avatar.dart';
+import '../../../addMembers/presentation/pages/add_members_page.dart';
 import '../../../dashboard/domain/entities/group.dart';
 import '../../../dashboard/presentation/widgets/group_avatar.dart';
 import '../bloc/group_bloc.dart';
@@ -122,7 +123,8 @@ class GroupInfoPage extends StatelessWidget {
                         leadingWidget: const Icon(Icons.person_add),
                         title: 'Add Members',
                         onTap: () {
-                          // Handle WhatsApp invite
+                          Navigator.push(
+                              context, AddMembersPage.route(group: group));
                         },
                       ),
                       const ListDivider(),
@@ -149,36 +151,26 @@ class GroupInfoPage extends StatelessWidget {
                 ),
 
                 // Members List
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    childCount: group.members.length * 2,
-                    (context, index) {
-                      if (index.isEven) {
-                        final memberIndex = index ~/ 2;
-                        if (memberIndex >= group.members.length) return null;
-                        final user = group.members[memberIndex].user;
-                        return MembersListItem(
-                            isDense: true,
-                            title: ProfileConstants.displayName(
-                                firstName: user.firstName,
-                                lastName: user.lastName),
-                            leadingWidget: ProfileAvatar(
-                              radius:
-                                  KSizes.listItemCircleImageAvatarRadiusSize,
-                              userInitials: ProfileConstants.userInitials(
-                                  firstName: user.firstName),
-                              imageId: user.profilePicture,
-                            ),
-                            subtitle: group.members[memberIndex].role ==
-                                    GroupMemberRole.admin
+                SliverList.separated(
+                  itemCount: group.members.length,
+                  itemBuilder: (context, index) {
+                    final user = group.members[index].user;
+                    return MembersListItem(
+                        title: ProfileConstants.displayName(
+                            firstName: user.firstName, lastName: user.lastName),
+                        leadingWidget: ProfileAvatar(
+                          radius: KSizes.listItemCircleImageAvatarRadiusSize,
+                          userInitials: ProfileConstants.userInitials(
+                              firstName: user.firstName),
+                          imageId: user.profilePicture,
+                        ),
+                        subtitle:
+                            group.members[index].role == GroupMemberRole.admin
                                 ? 'Admin'
                                 : null,
-                            onTap: () {});
-                      } else {
-                        return const ListDivider();
-                      }
-                    },
-                  ),
+                        onTap: () {});
+                  },
+                  separatorBuilder: (context, index) => const ListDivider(),
                 ),
 
                 // Bottom padding to account for the Done button

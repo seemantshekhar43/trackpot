@@ -32,7 +32,9 @@ class KSizes {
   // Image sizes
   static const double imageThumbSize = 80.0;
   static const double circleImageAvatarRadiusSize = 60.0;
-  static const double listItemCircleImageAvatarRadiusSize = 30.0;
+  static const double listItemCircleImageAvatarRadiusSize = 20.0;
+  static const double chipItemCircleImageAvatarRadiusSize = 8.0;
+
 
 
   // Default spacing between sections
@@ -52,6 +54,7 @@ class KSizes {
   // container  dimensions
   static const double containerSquareLg = 120.0;
   static const double containerSquareSMd = 100.0;
+  static const double containerSquareSm = 80.0;
   static const double containerSquareXLg = 160.0;
 
   // Input field
