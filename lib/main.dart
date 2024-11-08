@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'core/common/cubits/user_preferences/user_preferences_cubit.dart';
 
 import 'app.dart';
 import 'core/common/cubits/app_user/app_user_cubit.dart';
@@ -21,6 +22,10 @@ void main() async {
       ),
       BlocProvider(
         create: (_) => serviceLocator<HomeBloc>(),
+      ),
+      BlocProvider<UserPreferencesCubit>(
+        create: (_) =>
+            serviceLocator<UserPreferencesCubit>()..loadPreferences(),
       ),
       RepositoryProvider<FileRepository>(
         create: (context) => serviceLocator<FileRepository>(),

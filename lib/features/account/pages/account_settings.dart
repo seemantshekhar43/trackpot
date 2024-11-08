@@ -4,6 +4,7 @@ import '../../../core/constants/profile_constants.dart';
 import '../../../core/styles/sizes.dart';
 import '../../../core/widgets/list_divider.dart';
 import '../../auth/presentation/bloc/auth_bloc.dart';
+import '../../settings/presentations/pages/select_theme.dart';
 import '../widgets/profile_avatar.dart';
 import '../../../core/widgets/section_heading.dart';
 import '../widgets/settings_list_item.dart';
@@ -39,7 +40,8 @@ class AccountSettingsPage extends StatelessWidget {
                         child: ProfileAvatar(
                       imageId: user.profilePicture,
                       radius: KSizes.circleImageAvatarRadiusSize,
-                      userInitials: ProfileConstants.userInitials(firstName: user.firstName),
+                      userInitials: ProfileConstants.userInitials(
+                          firstName: user.firstName),
                     )),
                     const SizedBox(
                       height: KSizes.smd,
@@ -95,7 +97,8 @@ class AccountSettingsPage extends StatelessWidget {
                     SettingsListItem(
                       icon: Icons.brightness_6_rounded,
                       title: 'App theme',
-                      onTap: () => {},
+                      onTap: () =>
+                          {Navigator.push(context, SelectTheme.route())},
                     ),
                     const ListDivider(),
                     const Padding(

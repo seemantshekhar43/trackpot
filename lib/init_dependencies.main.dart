@@ -9,6 +9,7 @@ Future<void> initDependencies() async {
   _initDashboard();
   _initGroup();
   _initAddMember();
+  await _initUserPreferences();
 
   Client client = Client();
   client
@@ -192,4 +193,24 @@ void _initUsers() {
     // repository
     ..registerFactory<UsersRepository>(
         () => UsersRepositoryImpl(usersRemoteDatasource: serviceLocator()));
+}
+
+Future<void> _initUserPreferences() async {
+  // Cubit
+  serviceLocator
+    ..registerLazySingleton(
+      () => UserPreferencesCubit(repository: serviceLocator()),
+    )
+
+    // Repository
+    ..registerLazySingleton<UserPreferencesRepository>(
+      () => UserPreferencesRepositoryImpl(localDataSource: serviceLocator()),
+    );
+
+  // Data Source
+  final sharedPreferences = await SharedPreferences.getInstance();
+  serviceLocator.registerLazySingleton<UserPreferencesLocalDataSource>(
+    () => UserPreferencesLocalDataSourceImpl(
+        sharedPreferences: sharedPreferences),
+  );
 }
