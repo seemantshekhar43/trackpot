@@ -6,7 +6,7 @@ import '../../../../../core/constants/group_member_role.dart';
 import '../../../../dashboard/domain/entities/group.dart';
 import '../../../../dashboard/domain/entities/group_member.dart';
 import '../../../../dashboard/domain/usecases/create_group.dart';
-import '../../../domain/usecases/update_group.dart';
+import '../../../../groupInfo/domain/usecases/update_group.dart';
 
 part 'create_group_state.dart';
 

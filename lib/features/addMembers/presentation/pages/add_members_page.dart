@@ -7,7 +7,7 @@ import '../../../../core/widgets/list_divider.dart';
 import '../../../../init_dependencies.dart';
 import '../../../account/widgets/profile_avatar.dart';
 import '../../../dashboard/domain/entities/group.dart';
-import '../../../group/presentation/widgets/members_list_item.dart';
+import '../../../groupInfo/presentation/widgets/members_list_item.dart';
 import '../cubit/add_members_cubit.dart';
 import '../widgets/selected_user_chip.dart';
 

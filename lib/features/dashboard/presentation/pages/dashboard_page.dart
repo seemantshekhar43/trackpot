@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/styles/sizes.dart';
 import '../../../../core/widgets/list_divider.dart';
 import '../../../../init_dependencies.dart';
-import '../../../group/presentation/pages/add_group.dart';
+import '../../../groupInfo/presentation/pages/add_group.dart';
 import '../../../group/presentation/pages/group_page.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../widgets/balance_card.dart';

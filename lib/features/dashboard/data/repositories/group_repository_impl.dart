@@ -6,10 +6,12 @@ import '../../../../core/exception/failure.dart';
 import '../../../../core/exception/server_exception.dart';
 import '../../../../core/network/network_connection_checker.dart';
 import '../../domain/entities/group.dart' as group_entity;
+import '../../domain/entities/group_member.dart';
 import '../../domain/entities/group_summary.dart';
 import '../../domain/repository/group_repository.dart';
 import '../datasources/group_cache_datasource.dart';
 import '../datasources/group_remote_datasource.dart';
+import '../models/group_member_model.dart';
 import '../models/group_model.dart';
 
 class GroupRepositoryImpl implements GroupRepository {
@@ -35,7 +37,6 @@ class GroupRepositoryImpl implements GroupRepository {
         group = group.copyWith(groupPic: groupPicId);
       }
       final groupData = GroupModel.fromEntity(group);
-
 
       //add admin group member
       // final String createBy = groupData['createdBy'];
@@ -244,11 +245,12 @@ class GroupRepositoryImpl implements GroupRepository {
   }
 
   @override
-  Future<Either<Failure, group_entity.Group>> updateGroup(group_entity.Group group, String? groupPic) async {
+  Future<Either<Failure, group_entity.Group>> updateGroup(
+      group_entity.Group group, String? groupPic) async {
     try {
       if (groupPic != null) {
-        groupPic = await groupRemoteDataSource
-            .uploadGroupPicture(File(groupPic));
+        groupPic =
+            await groupRemoteDataSource.uploadGroupPicture(File(groupPic));
       }
       if (groupPic != null) {
         group = group.copyWith(groupPic: groupPic);
@@ -261,11 +263,55 @@ class GroupRepositoryImpl implements GroupRepository {
       return left(Failure(message: e.message));
     }
   }
+
   @override
-  Future<Either<Failure, group_entity.Group>> addMember(group_entity.Group group) async {
+  Future<Either<Failure, group_entity.Group>> addMember(
+      group_entity.Group group) async {
     try {
       final groupData = GroupModel.fromEntity(group);
       final result = await groupRemoteDataSource.updateGroup(groupData);
+      return right(result.toEntity());
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteGroup(group_entity.Group group) async {
+    try {
+      if (group.groupPic != null) {
+        print('Group Pic: ${group.groupPic}');
+        await groupRemoteDataSource.deleteGroupPicture(group.groupPic!);
+      }
+
+      await groupRemoteDataSource.deleteGroup(group.id);
+      return right(null);
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, group_entity.Group>> removeMember(
+      group_entity.Group group, GroupMember member) async {
+    try {
+      final groupData = GroupModel.fromEntity(group);
+      final result = await groupRemoteDataSource.updateGroup(groupData);
+
+      //delete group member
+      await groupRemoteDataSource.deleteGroupMember(member.id);
+      return right(result.toEntity());
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GroupMember>> updateGroupMember(GroupMember member) async {
+    try {
+      final groupMemberData = GroupMemberModel.fromEntity(member);
+
+      final result = await groupRemoteDataSource.updateGroupMember(groupMemberData);
       return right(result.toEntity());
     } on ServerException catch (e) {
       return left(Failure(message: e.message));

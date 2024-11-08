@@ -161,10 +161,12 @@ void _initGroup() {
   serviceLocator
     //usecases
     ..registerFactory<WatchGroupById>(() => WatchGroupById(serviceLocator()))
+    ..registerFactory<DeleteGroup>(() => DeleteGroup(serviceLocator()))
+    ..registerFactory<RemoveMember>(() => RemoveMember(serviceLocator()))
 
     //bloc
-    ..registerFactory<GroupBloc>(
-        () => GroupBloc(watchGroupById: serviceLocator()));
+    ..registerFactory<GroupPageBloc>(
+        () => GroupPageBloc(watchGroupById: serviceLocator()));
 }
 
 void _initAddMember() {

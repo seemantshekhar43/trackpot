@@ -9,11 +9,13 @@ class MembersListItem extends StatelessWidget {
   final bool isDense;
   final Color? tileColor;
   final bool isSelected;
+  final TextStyle? titleTextStyle;
   const MembersListItem(
       {super.key,
       required this.title,
       this.subtitle,
       this.trailing,
+        this.titleTextStyle,
       required this.leadingWidget,
       this.isDense = false,
       this.isSelected = false,
@@ -25,7 +27,7 @@ class MembersListItem extends StatelessWidget {
     return ListTile(
       dense: isDense,
       leading: leadingWidget,
-      title: Text(title),
+      title: Text(title, style: titleTextStyle,),
       trailing: trailing,
       tileColor: tileColor,
       selected: isSelected,

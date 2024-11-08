@@ -8,26 +8,26 @@ import '../../../../core/exception/failure.dart';
 import '../../../dashboard/domain/entities/group.dart' as group_entity;
 import '../../domain/usecases/watch_group_by_id.dart';
 
-part 'group_event.dart';
-part 'group_state.dart';
+part 'group_page_event.dart';
+part 'group_page_state.dart';
 
-class GroupBloc extends Bloc<GroupEvent, GroupState> {
+class GroupPageBloc extends Bloc<GroupPageEvent, GroupPageState> {
   final WatchGroupById watchGroupById;
   StreamSubscription<Either<Failure, group_entity.Group>>? _groupSubscription;
 
-  GroupBloc({
+  GroupPageBloc({
     required this.watchGroupById,
-  }) : super(const GroupInitial()) {
-    on<LoadGroup>(_onLoadGroup);
-    on<ClearGroup>(_onClearGroup);
+  }) : super(const GroupPageInitial()) {
+    on<LoadGroupPage>(_onLoadGroup);
+    on<ClearGroupPage>(_onClearGroup);
   }
 
   Future<void> _onLoadGroup(
-    LoadGroup event,
-    Emitter<GroupState> emit,
+    LoadGroupPage event,
+    Emitter<GroupPageState> emit,
   ) async {
     try {
-      emit(const GroupLoading());
+      emit(const GroupPageLoading());
 
       await _groupSubscription?.cancel();
 
@@ -37,13 +37,13 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
             .handleError(
           (error) {
             if (!emit.isDone) {
-              emit(GroupError(error.toString()));
+              emit(GroupPageError(error.toString()));
             }
           },
         ),
         onData: (result) => result.fold(
-          (failure) => GroupError(failure.message),
-          (group) => GroupLoaded(
+          (failure) => GroupPageError(failure.message),
+          (group) => GroupPageLoaded(
             group: group,
             lastUpdated: DateTime.now(),
           ),
@@ -51,17 +51,17 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       );
     } catch (e) {
       if (!emit.isDone) {
-        emit(GroupError(e.toString()));
+        emit(GroupPageError(e.toString()));
       }
     }
   }
 
   void _onClearGroup(
-    ClearGroup event,
-    Emitter<GroupState> emit,
+    ClearGroupPage event,
+    Emitter<GroupPageState> emit,
   ) async {
     await _groupSubscription?.cancel();
-    emit(const GroupInitial());
+    emit(const GroupPageInitial());
   }
 
   @override

@@ -4,14 +4,18 @@ import 'package:appwrite/appwrite.dart';
 import '../../../../core/constants/appwrite_constants.dart';
 import '../../../../core/exception/server_exception.dart';
 import '../../../../core/secrets/app_secrets.dart';
+import '../models/group_member_model.dart';
 import '../models/group_model.dart';
 
 abstract class GroupRemoteDataSource {
   Future<List<GroupModel>> getUserGroups(String userId);
 
   Future<GroupModel> createGroup(GroupModel group);
+  Future<void> deleteGroup(String groupId);
+  Future<void> deleteGroupMember(String groupId);
 
   Future<String> uploadGroupPicture(File picture);
+  Future<void> deleteGroupPicture(String pictureId);
 
   Future<List<Map<String, dynamic>>> getGroupExpenses(String groupId);
 
@@ -21,7 +25,7 @@ abstract class GroupRemoteDataSource {
   Stream<GroupModel> watchGroupById(String groupId);
   Future<GroupModel> getGroupById(String groupId);
   Future<GroupModel> updateGroup(GroupModel group);
-
+  Future<GroupMemberModel> updateGroupMember(GroupMemberModel groupMember);
 }
 
 class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
@@ -108,6 +112,22 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   }
 
   @override
+  Future<void> deleteGroupPicture(String pictureId) async {
+    try {
+      await _storage.deleteFile(
+        bucketId: AppwriteConstants.groupPicBucket,
+        fileId: pictureId,
+      );
+
+      return;
+    } on AppwriteException catch (e) {
+      throw ServerException(e.message ?? 'Some unexpected error occurred');
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
   Future<GroupModel> getGroupById(String groupId) async {
     try {
       final result = await _db.getDocument(
@@ -149,5 +169,57 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     ]);
     // Update this to not call getGroupById rather parse event data to get latest group
     return groupSubscription.stream.asyncMap((_) => getGroupById(groupId));
+  }
+
+  @override
+  Future<void> deleteGroup(String groupId) async {
+    try {
+      await _db.deleteDocument(
+        databaseId: AppSecrets.databaseId,
+        collectionId: AppwriteConstants.groupsCollection,
+        documentId: groupId,
+      );
+
+      return;
+    } on AppwriteException catch (e) {
+      throw ServerException(e.message ?? 'Some unexpected error occurred');
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteGroupMember(String memberId) async {
+    try {
+      await _db.deleteDocument(
+        databaseId: AppSecrets.databaseId,
+        collectionId: AppwriteConstants.groupMembersCollection,
+        documentId: memberId,
+      );
+
+      return;
+    } on AppwriteException catch (e) {
+      throw ServerException(e.message ?? 'Some unexpected error occurred');
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<GroupMemberModel> updateGroupMember(GroupMemberModel groupMember) async {
+    try {
+      final result = await _db.updateDocument(
+        databaseId: AppSecrets.databaseId,
+        collectionId: AppwriteConstants.groupMembersCollection,
+        documentId: groupMember.id,
+        data: groupMember.toMap(),
+      );
+
+      return GroupMemberModel.fromMap(result.data);
+    } on AppwriteException catch (e) {
+      throw ServerException(e.message ?? 'Some unexpected error occurred');
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 }
