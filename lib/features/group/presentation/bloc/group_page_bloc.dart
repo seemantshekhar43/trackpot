@@ -19,13 +19,14 @@ class GroupPageBloc extends Bloc<GroupPageEvent, GroupPageState> {
     required this.watchGroupById,
   }) : super(const GroupPageInitial()) {
     on<LoadGroupPage>(_onLoadGroup);
+    on<ChangeGroupTab>(_onChangeTab);
     on<ClearGroupPage>(_onClearGroup);
   }
 
   Future<void> _onLoadGroup(
-    LoadGroupPage event,
-    Emitter<GroupPageState> emit,
-  ) async {
+      LoadGroupPage event,
+      Emitter<GroupPageState> emit,
+      ) async {
     try {
       emit(const GroupPageLoading());
 
@@ -35,17 +36,18 @@ class GroupPageBloc extends Bloc<GroupPageEvent, GroupPageState> {
         watchGroupById
             .call(WatchGroupByIdParams(groupId: event.groupId))
             .handleError(
-          (error) {
+              (error) {
             if (!emit.isDone) {
               emit(GroupPageError(error.toString()));
             }
           },
         ),
         onData: (result) => result.fold(
-          (failure) => GroupPageError(failure.message),
-          (group) => GroupPageLoaded(
+              (failure) => GroupPageError(failure.message),
+              (group) => GroupPageLoaded(
             group: group,
             lastUpdated: DateTime.now(),
+            activeTab: 0, // Default to Expenses tab
           ),
         ),
       );
@@ -56,10 +58,20 @@ class GroupPageBloc extends Bloc<GroupPageEvent, GroupPageState> {
     }
   }
 
+  void _onChangeTab(
+      ChangeGroupTab event,
+      Emitter<GroupPageState> emit,
+      ) {
+    if (state is GroupPageLoaded) {
+      final currentState = state as GroupPageLoaded;
+      emit(currentState.copyWith(activeTab: event.tabIndex));
+    }
+  }
+
   void _onClearGroup(
-    ClearGroupPage event,
-    Emitter<GroupPageState> emit,
-  ) async {
+      ClearGroupPage event,
+      Emitter<GroupPageState> emit,
+      ) async {
     await _groupSubscription?.cancel();
     emit(const GroupPageInitial());
   }

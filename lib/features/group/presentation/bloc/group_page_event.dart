@@ -16,6 +16,15 @@ final class LoadGroupPage extends GroupPageEvent {
   List<Object?> get props => [groupId];
 }
 
+final class ChangeGroupTab extends GroupPageEvent {
+  final int tabIndex;
+
+  const ChangeGroupTab(this.tabIndex);
+
+  @override
+  List<Object?> get props => [tabIndex];
+}
+
 final class ClearGroupPage extends GroupPageEvent {
   const ClearGroupPage();
 }

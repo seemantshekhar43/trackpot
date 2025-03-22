@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../../../../core/common/models/expense_model.dart';
 import '../../../../core/common/models/user_model.dart';
 import '../../domain/entities/expense_summary.dart';
 import '../../domain/entities/group.dart';
@@ -16,19 +17,32 @@ class GroupModel {
   final UserModel createdBy;
   final List<GroupMemberModel> members;
   final List<String> memberIds;
+  final List<ExpenseModel> expenses;
 
-  GroupModel(
-      {required this.id,
-      required this.name,
-      this.category,
-      this.groupPic,
-      required this.currency,
-      required this.createdAt,
-      required this.createdBy,
-      required this.members,
-      required this.memberIds});
+  GroupModel({
+    required this.id,
+    required this.name,
+    this.category,
+    this.groupPic,
+    required this.currency,
+    required this.createdAt,
+    required this.createdBy,
+    required this.members,
+    required this.memberIds,
+    this.expenses = const [],
+  });
 
   factory GroupModel.fromMap(Map<String, dynamic> json) {
+    List<ExpenseModel> expenses = [];
+
+    // Parse expenses if they exist in the response
+    if (json['expenses'] != null && json['expenses'] is List) {
+      expenses = (json['expenses'] as List)
+          .map((expense) => expense as Map<String, dynamic>)
+          .map((expense) => ExpenseModel.fromMap(expense))
+          .toList();
+    }
+
     return GroupModel(
       id: json['\$id'] as String,
       name: json['name'] as String,
@@ -48,6 +62,7 @@ class GroupModel {
               .map((memberId) => memberId as String)
               .toList()
           : [],
+      expenses: expenses,
     );
   }
 
@@ -75,20 +90,25 @@ class GroupModel {
           .map((member) => GroupMemberModel.fromEntity(member))
           .toList(),
       memberIds: group.memberIds,
+      expenses: group.expenses
+          .map((expense) => ExpenseModel.fromEntity(expense))
+          .toList(),
     );
   }
 
   Group toEntity() {
     return Group(
-        id: id,
-        name: name,
-        category: category,
-        groupPic: groupPic,
-        currency: currency,
-        createdAt: createdAt,
-        createdBy: createdBy.toEntity(),
-        members: members.map((member) => member.toEntity()).toList(),
-        memberIds: memberIds);
+      id: id,
+      name: name,
+      category: category,
+      groupPic: groupPic,
+      currency: currency,
+      createdAt: createdAt,
+      createdBy: createdBy.toEntity(),
+      members: members.map((member) => member.toEntity()).toList(),
+      memberIds: memberIds,
+      expenses: expenses.map((expense) => expense.toEntity()).toList(),
+    );
   }
 
   GroupSummary toGroupSummaryEntity() {

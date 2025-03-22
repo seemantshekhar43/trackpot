@@ -1,3 +1,4 @@
+import '../../../../core/common/entities/expense.dart';
 import '../../../../core/common/entities/user.dart';
 import 'group_member.dart';
 
@@ -11,6 +12,7 @@ class Group {
   final User createdBy;
   final List<GroupMember> members;
   final List<String> memberIds;
+  final List<Expense> expenses;
 
   const Group({
     required this.id,
@@ -22,6 +24,7 @@ class Group {
     required this.createdBy,
     required this.members,
     required this.memberIds,
+    this.expenses = const [],
   });
 
   Group copyWith({
@@ -34,6 +37,7 @@ class Group {
     User? createdBy,
     List<GroupMember>? members,
     List<String>? memberIds,
+    List<Expense>? expenses,
   }) {
     return Group(
       id: id ?? this.id,
@@ -45,6 +49,7 @@ class Group {
       createdBy: createdBy ?? this.createdBy,
       members: members ?? List.from(this.members),
       memberIds: memberIds ?? List.from(this.memberIds),
+      expenses: expenses ?? List.from(this.expenses),
     );
   }
 }
